@@ -7,10 +7,16 @@ module.exports = {
     branch: 'async'
   },
   init: (server) => {
-    if (server.backlinks) throw new Error('ssb-tangle requires ssb-backlinks to work')
+    checkBacklinks(server)
 
     return {
       branch: getBranch(server)
     }
   }
+}
+
+function checkBacklinks (server) {
+  setTimeout(() => {
+    if (!server.backlinks) throw new Error('ssb-tangle require ssb-backlinks to be installed')
+  }, 2e3)
 }
