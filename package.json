@@ -1,6 +1,6 @@
 {
   "name": "ssb-tangle",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "common helper methods for scuttlebutt tangles!",
   "main": "index.js",
   "scripts": {
