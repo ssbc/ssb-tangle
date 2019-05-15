@@ -1,0 +1,30 @@
+{
+  "name": "ssb-tangle",
+  "version": "1.0.0",
+  "description": "common helper methods for scuttlebutt tangles!",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssbc/ssb-tangle.git"
+  },
+  "keywords": [
+    "scuttlebutt",
+    "tangle",
+    "causal-sort"
+  ],
+  "author": "mixmix",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ssbc/ssb-tangle/issues"
+  },
+  "homepage": "https://github.com/ssbc/ssb-tangle#readme",
+  "dependencies": {
+    "is-my-json-valid": "^2.20.0",
+    "pull-stream": "^3.6.11",
+    "ssb-ref": "^2.13.9",
+    "ssb-sort": "^1.1.3"
+  }
+}
