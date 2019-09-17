@@ -1,0 +1,31 @@
+{
+  "name": "ssb-thread-tangle",
+  "version": "0.0.1",
+  "description": "a tool for dealing with thread-type tangles in scuttlebutt",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape tests/**/*.js | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssbc/ssb-thread-tangle.git"
+  },
+  "keywords": [
+    "scuttlebutt",
+    "tangles",
+    "helper"
+  ],
+  "author": "mixmix",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ssbc/ssb-thread-tangle/issues"
+  },
+  "homepage": "https://github.com/ssbc/ssb-thread-tangle#readme",
+  "devDependencies": {
+    "tap-spec": "^5.0.0",
+    "tape": "^4.11.0"
+  },
+  "dependencies": {
+    "lodash.set": "^4.3.2"
+  }
+}
