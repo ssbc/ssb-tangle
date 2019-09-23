@@ -43,7 +43,7 @@ test('buildGraph: merge', t => {
   //  B   C
   //   \ /
   //    D
-
+  //
   const A = { key: 'A', thread: { first: null, previous: null } }
   const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
   const C = { key: 'C', thread: { first: 'A', previous: ['A'] } }
