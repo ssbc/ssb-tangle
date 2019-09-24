@@ -2,6 +2,8 @@ const test = require('tape')
 const Graph = require('../lib/build-graph')
 
 test('buildGraph: linear', t => {
+  // ## happy case
+  //
   //    A   (first)
   //    |
   //    B
@@ -12,7 +14,7 @@ test('buildGraph: linear', t => {
   const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
   const C = { key: 'C', thread: { first: 'A', previous: ['B'] } }
 
-  const expected = () => ({
+  const expected = {
     graph: {
       A: { B: 1 },
       B: { C: 1 }
@@ -21,27 +23,58 @@ test('buildGraph: linear', t => {
       connected: { A, B, C },
       disconnected: {}
     }
-  })
+  }
 
-  t.deepEqual(Graph(A, [B, C]), expected(), 'happy')
-  t.deepEqual(Graph(A, [C, B]), expected(), 'happy (different order)')
+  t.deepEqual(Graph(A, [B, C]), expected, 'happy')
+  t.deepEqual(Graph(A, [C, B]), expected, 'happy (different order)')
+  /// /////////////////////////////////////////////////////////////////
 
-  // A totally detached node
+  // ## messages from another threads
+  //
+  //    A (first)           R?  (first, some other thread)
+  //    |                   ?
+  //    B                   S (a message we don't have)
+  //    |                   |
+  //    C                   Q
+
   const Q = { key: 'Q', thread: { first: 'R', previous: ['S'] } }
-  const e1 = expected()
-  e1.graph.S = { Q: 1 }
-  e1.nodes.disconnected.Q = Q
-  e1.nodes.disconnected.S = null
+  const expected2 = {
+    graph: {
+      A: { B: 1 },
+      B: { C: 1 },
+      S: { Q: 1 }
+    },
+    nodes: {
+      connected: { A, B, C },
+      disconnected: { Q, S: null }
+    }
+  }
 
-  t.deepEqual(Graph(A, [B, C, Q]), e1, 'ignores out of thread messages')
+  t.deepEqual(Graph(A, [B, C, Q]), expected2, 'ignores out of thread messages')
+  /// /////////////////////////////////////////////////////////////////
 
-  // In thread but ... dangling (doesn't link up to known messages)
-  const K = { key: 'K', thread: { first: 'A', previous: ['S'] } }
-  const e2 = expected()
-  e2.graph.S = { K: 1 }
-  e2.nodes.disconnected.K = K
-  e2.nodes.disconnected.S = null
-  t.deepEqual(Graph(A, [B, C, K]), e2, 'ignores dangles (in-thread but missing causal backlink)')
+  // ## message in-thread but "dangling" (doesn't link up to known messages)
+  //
+  //    A   (first)
+  //    |
+  //    B     ----?--- J? (a message we don't have)
+  //    |              |
+  //    C              K
+
+  const K = { key: 'K', thread: { first: 'A', previous: ['J'] } }
+  const expected3 = {
+    graph: {
+      A: { B: 1 },
+      B: { C: 1 },
+      J: { K: 1 }
+    },
+    nodes: {
+      connected: { A, B, C },
+      disconnected: { K, J: null }
+    }
+  }
+  t.deepEqual(Graph(A, [B, C, K]), expected3, 'ignores dangles (in-thread but missing causal backlink)')
+  /// /////////////////////////////////////////////////////////////////
 
   t.end()
 })
