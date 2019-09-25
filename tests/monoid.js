@@ -64,6 +64,24 @@ test('mapMonoid (set)', t => {
   t.end()
 })
 
+  // const t1 = {
+  //   type: 'add',
+  //   data: [
+  //     { author: '@mix', start: 343, stop: null }
+  //   ]
+  // }
+  // const t2 = {
+  //   type: 'add',
+  //   data: [
+  //     { author: '@mix', start: null, stop: 400 },
+  //     { author: '@alj', start: 255, stop: null },
+  //   ]
+  // }
+  // const t2 = { type: 'set', data: { '@bundy': 22, '@aljoscha': 12355 } }
+  // const t3 = { type: 'set', data: { '@mix': 20500 } }
+
+
+
 
 test('Monoid#compose', { todo: true }, t => {
   t.end()
