@@ -1,5 +1,5 @@
 const test = require('tape')
-const prune = require('../lib/prune-map')
+const prune = require('../lib/prune-edge-map')
 
 //      A  (first)
 //     / \

@@ -1,8 +1,8 @@
 const test = require('tape')
-const sort = require('../lib/connection-sort')
-const Map = require('../lib/build-map')
+const Dictionary = require('../lib/build-node-lookup.js')
+const Map = require('../lib/build-edge-map')
 
-test('connectionSort', t => {
+test('build-node-lookup', t => {
   // ## message in-thread but "dangling" (doesn't link up to known messages)
   //
   //    A   (first)
@@ -23,7 +23,7 @@ test('connectionSort', t => {
     disconnected: { J: null, K }
   }
 
-  t.deepEqual(sort(map, A, [B, C, K]), expected, 'categorises connected/ disconnected')
+  t.deepEqual(Dictionary(map, A, [B, C, K]), expected, 'categorises connected/ disconnected')
 
   t.end()
 })

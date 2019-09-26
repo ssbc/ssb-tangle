@@ -1,8 +1,8 @@
 const test = require('tape')
 const get = require('lodash.get')
-const Map = require('../lib/build-map')
+const Map = require('../lib/build-edge-map')
 
-test('buildMap: linear', t => {
+test('build-edge-map: linear', t => {
   //    A   (first)
   //    |
   //    B
@@ -26,7 +26,7 @@ test('buildMap: linear', t => {
   t.end()
 })
 
-test('buildMap: merge', t => {
+test('build-edge-map: merge', t => {
   //     A   (first)
   //    / \
   //   B   C
@@ -48,7 +48,7 @@ test('buildMap: merge', t => {
   t.end()
 })
 
-test('buildMap: dangle', t => {
+test('build-edge-map: dangle', t => {
   //    A   (first)
   //    |
   //    B     ----?--- J? (a message we don't have)
@@ -70,7 +70,7 @@ test('buildMap: dangle', t => {
   t.end()
 })
 
-test('buildMap: non-thread dangles', t => {
+test('build-edge-map: non-thread dangles', t => {
   //    A (first)           R?  (first, some other thread)
   //    |                   ?
   //    B                   S (a message we don't have)
@@ -92,7 +92,7 @@ test('buildMap: non-thread dangles', t => {
   t.end()
 })
 
-test('buildMap: complex merge', t => {
+test('build-edge-map: complex merge', t => {
   //      A  (first)
   //     / \
   //    B   C
@@ -128,7 +128,7 @@ test('buildMap: complex merge', t => {
   t.end()
 })
 
-test('buildMap: custom thread path', t => {
+test('build-edge-map: custom thread path', t => {
   //      A  (first)
   //     / \
   //    B   C
