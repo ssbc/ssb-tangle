@@ -26,6 +26,7 @@
     "tape": "^4.11.0"
   },
   "dependencies": {
+    "lodash.clone": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.2",
