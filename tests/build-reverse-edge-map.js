@@ -1,5 +1,5 @@
 const test = require('tape')
-const Map = require('../lib/build-reverse-edge-map')
+const ReverseMap = require('../lib/build-reverse-edge-map')
 
 test('build-reverse-edge-map: merge', t => {
   //     A   (first)
@@ -8,10 +8,11 @@ test('build-reverse-edge-map: merge', t => {
   //    \ /
   //     D
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['A'] } }
-  const D = { key: 'D', thread: { first: 'A', previous: ['B', 'C'] } }
+  const map = {
+    A: { B: 1, C: 1 },
+    B: { D: 1 },
+    C: { D: 1 }
+  }
 
   const expected = {
     D: { B: 1, C: 1 },
@@ -19,6 +20,6 @@ test('build-reverse-edge-map: merge', t => {
     B: { A: 1 }
   }
 
-  t.deepEqual(Map([A, D, B, C]), expected, 'happy')
+  t.deepEqual(ReverseMap(map), expected, 'happy')
   t.end()
 })
