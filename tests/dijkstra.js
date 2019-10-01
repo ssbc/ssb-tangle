@@ -1,7 +1,11 @@
 const test = require('tape')
-const { longestPathLength, longestPath, buildLongestPathMap } = require('../lib/dijkstras.js')
+const {
+  longestPathLength,
+  longestPath,
+  buildLongestPathMap
+} = require('../lib/dijkstra')
 
-test('dijkstras', t => {
+test('dijkstra: simple', t => {
   //     A  (first)
   //    / \
   //   B   C
@@ -31,7 +35,7 @@ test('dijkstras', t => {
   t.end()
 })
 
-test('dijkstras - more complex', t => {
+test('dijkstra: more complex', t => {
   //     A  (first)
   //    / \
   //   B   C

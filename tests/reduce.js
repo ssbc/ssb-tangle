@@ -8,18 +8,18 @@ test('reduce', t => {
 
   const A = {
     key: 'A',
-    thread: { first: null, previous: null },
-    ouji: 'hello'
+    ouji: 'hello',
+    thread: { first: null, previous: null }
   }
   const B = {
     key: 'B',
-    thread: { first: 'A', previous: ['A'] },
-    ouji: ' mix'
+    ouji: ' mix',
+    thread: { first: 'A', previous: ['A'] }
   }
   const C = {
     key: 'C',
-    thread: { first: 'A', previous: ['A'] },
-    ouji: ' world'
+    ouji: ' world',
+    thread: { first: 'A', previous: ['A'] }
   }
 
   const strategies = {
@@ -27,7 +27,7 @@ test('reduce', t => {
       concat: (a, b) => a + b,
       identity: '',
       isConflict: (a, b) => a !== b,
-      conflictMergeType: 'SET'
+      conflictMerge: (merge, heads) => merge
     }
   }
 
@@ -48,8 +48,8 @@ test('reduce', t => {
 
   const D = {
     key: 'D',
-    thread: { first: 'A', previous: ['B', 'C'] },
-    ouji: 'hello world (mix)'
+    ouji: 'hello world (mix)',
+    thread: { first: 'A', previous: ['B', 'C'] }
   }
 
   t.deepEqual(
@@ -57,7 +57,7 @@ test('reduce', t => {
     {
       D: { ouji: 'hello world (mix)' }
     },
-    'simple hydra'
+    'merge with conflict'
   )
 
   t.end()

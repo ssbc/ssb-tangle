@@ -1,6 +1,5 @@
 const test = require('tape')
-const Map = require('../lib/build-edge-map')
-const Lookup = require('../lib/build-node-lookup')
+const Graph = require('../lib/graph')
 const Find = require('../lib/find-time-travellers.js')
 
 test('find-time-traveller', t => {
@@ -18,10 +17,9 @@ test('find-time-traveller', t => {
   const D = { key: 'D', author: 'WARIO', seq: 20, thread: { first: 'A', previous: ['C'] } }
   const E = { key: 'E', author: 'WARIO', seq: 21, thread: { first: 'A', previous: ['B'] } }
 
-  const map1 = Map([A, B, C, D, E])
-  const lookup1 = Lookup(map1, A, [B, C, D, E]).connected
+  const graph = Graph(A, [B, C, D, E])
 
-  t.deepEqual(Find(map1, lookup1, 'A'), ['E'], 'simple case')
+  t.deepEqual(Find(graph), ['E'], 'simple case')
 
   /// ///////////////////////////////////////////////////////////////////////
 
@@ -39,11 +37,11 @@ test('find-time-traveller', t => {
     { key: 'E', author: 'WARIO', seq: 65, thread: { first: 'A', previous: ['C'] } }
   ]
 
-  const map2 = Map(messages)
-  const first2 = messages.shift()
-  const lookup2 = Lookup(map2, first2, messages).connected
+  const initial = messages.shift()
 
-  t.deepEqual(Find(map2, lookup2, 'A'), ['E'], 'more complex case')
+  const graph2 = Graph(initial, messages)
+
+  t.deepEqual(Find(graph2), ['E'], 'more complex case')
   t.end()
 })
 

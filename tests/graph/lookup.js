@@ -1,8 +1,8 @@
 const test = require('tape')
-const Dictionary = require('../lib/build-node-lookup.js')
-const Map = require('../lib/build-edge-map')
+const Lookup = require('../../lib/graph/lookup.js')
+const { Map } = require('../../lib/graph/maps.js')
 
-test('build-node-lookup', t => {
+test('Lookup', t => {
   // ## message in-thread but "dangling" (doesn't link up to known messages)
   //
   //    A   (first)
@@ -18,12 +18,16 @@ test('build-node-lookup', t => {
 
   const map = Map([A, B, K, C])
 
+  const result = Lookup(map, A, [B, C, K])
   const expected = {
     connected: { A, B, C },
     disconnected: { J: null, K }
   }
 
-  t.deepEqual(Dictionary(map, A, [B, C, K]), expected, 'categorises connected/ disconnected')
+  t.deepEqual(result.connected, expected.connected, 'categorises connected')
+  t.deepEqual(result.disconnected, expected.disconnected, 'categorises disconnected')
+  t.deepEqual(result.getNode('A'), A, 'getNode')
+  t.equal(result.getNode('Y'), undefined, 'getNode (invalid key)')
 
   t.end()
 })
