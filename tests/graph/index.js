@@ -15,10 +15,20 @@ test('Graph', t => {
 
   const graph = Graph(A, [B, C, D])
 
-  t.false(graph.isMergeNode('A'))
-  t.false(graph.isMergeNode('B'))
-  t.true(graph.isMergeNode('D'))
-  t.false(graph.isMergeNode('Y'))
+  t.equal(graph.isBranchNode('A'), true)
+  t.equal(graph.isBranchNode('B'), false)
+  t.equal(graph.isBranchNode('D'), false)
+  t.equal(graph.isBranchNode('Y'), false)
+
+  t.equal(graph.isMergeNode('A'), false)
+  t.equal(graph.isMergeNode('B'), false)
+  t.equal(graph.isMergeNode('D'), true)
+  t.equal(graph.isMergeNode('Y'), false)
+
+  t.equal(graph.isHeadNode('A'), false)
+  t.equal(graph.isHeadNode('B'), false)
+  t.equal(graph.isHeadNode('D'), true)
+  t.equal(graph.isHeadNode('Y'), false)
 
   t.end()
 })
