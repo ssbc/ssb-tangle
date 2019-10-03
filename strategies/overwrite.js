@@ -1,11 +1,6 @@
 const isEqual = require('lodash.isequal')
-// const { combination } = require('js-combinatorics')
 
 function OverwriteStrategy () {
-  // const {
-  //   buildTransformation = _buildTransformation,
-  //   isTransformation = _isTransformation
-  // } = opts
   const IDENTITY = null
 
   function concat (a, b) {
@@ -17,7 +12,12 @@ function OverwriteStrategy () {
   }
 
   function isConflict (heads) {
-    // TODO check all permutations of heads!
+    // try merging the heads together checking commutative at each step
+    // e.g. if (A*B) === (B*A) then these can be merged
+    // then check if (A*B)*C === C*(A*B) etc.
+    // as long as set is associative with concat, then checking like this
+    // means we are checking all possible permutations of head merging
+
     var _heads = [...heads]
     var a = _heads.pop()
 
@@ -28,22 +28,22 @@ function OverwriteStrategy () {
       a = concat(a, b)
     }
     return false
-
-    // const combos = combination(heads, 2)
-    // var combo = combos.next()
-    // while (combo) {
-    //   if (!isEqual(concat(combo[0], combo[1]), concat(combo[1], combo[0]))) return true
-    //   combo = combos.next()
-    // }
-
-    // return false
   }
 
-  function isValidMerge (merge, heads) {
-    // if (isConflict(heads))
+  function isValidMerge (heads, merge) {
+    if (isConflict(heads)) return merge !== IDENTITY
+    // there's a conflict across the heads the merge MUST resolve
+
+    else return true
+    // can apply all changes
   }
 
-  function merge (merge, heads) {
+  function merge (heads, merge) {
+    // this is a crude merge strategy - the merge message over-writes all history to date
+    // in this strategy that's totally fine.
+    // In other cases ideally the merge message is a "patch" which replaces only the
+    // branched section of the graph
+
     // if (isConflict(heads)) return merge
     // TODO check all permutations of heads!
 

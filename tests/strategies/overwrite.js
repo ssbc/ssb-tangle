@@ -8,7 +8,9 @@ test('overwrite strategy', t => {
     buildTransformation,
     isTransformation,
     concat,
-    isConflict
+    isConflict,
+    isValidMerge,
+    merge
   } = strategy
 
   t.true(typeof identity, 'has identity')
@@ -39,13 +41,20 @@ test('overwrite strategy', t => {
 
   const A = () => buildTransformation('dog')
   const B = () => buildTransformation('cat')
+  const C = () => buildTransformation('cat-dog') // our merge message
 
+  // check whether there's any conflict between n heads
   t.equal(isConflict([A(), A()]), false, 'no conflict')
   t.equal(isConflict([A(), identity]), false, 'no conflict (identity)')
   t.equal(isConflict([A(), identity, A()]), false, 'no conflict (3-way)')
 
   t.equal(isConflict([A(), B()]), true, 'isConflict')
   t.equal(isConflict([A(), A(), B()]), true, 'isConflict (3 way)')
+
+  // check in on which sorts of merge require a merge message, and what that looks like
+  t.equal(isValidMerge([A(), B()], C()), true)
+  t.equal(isValidMerge([A(), identity], identity), true)
+  t.equal(isValidMerge([A(), B()], identity), false)
 
   t.end()
 })
