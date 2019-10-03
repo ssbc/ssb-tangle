@@ -1,5 +1,5 @@
 const test = require('tape')
-const Monoid = require('../lib/monoid')
+const Monoid = require('../../lib/monoid')
 
 test('stringMonoid', t => {
   const t1 = { type: 'set', data: 'hello world' }

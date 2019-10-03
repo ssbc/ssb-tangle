@@ -1,6 +1,6 @@
 const test = require('tape')
-const Lookup = require('../../lib/graph/lookup.js')
-const { Map } = require('../../lib/graph/maps.js')
+const Lookup = require('../../../lib/graph/lookup.js')
+const { Map } = require('../../../lib/graph/maps.js')
 
 test('Lookup', t => {
   // ## message in-thread but "dangling" (doesn't link up to known messages)

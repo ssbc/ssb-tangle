@@ -1,7 +1,18 @@
 const test = require('tape')
-const reduce = require('../lib/reduce')
+const reduce = require('../../lib/reduce')
 
+const overwriteStrategy = { // overwrite
+}
 test('reduce', t => {
+  const strategies = {
+    ouji: { // sringAppend
+      concat: (a, b) => a + b,
+      identity: '',
+      isConflict: (a, b) => a !== b,
+      conflictMerge: (merge, heads) => merge
+    }
+  }
+
   //     A   (first)
   //    / \
   //   B   C
@@ -20,15 +31,6 @@ test('reduce', t => {
     key: 'C',
     ouji: ' world',
     thread: { first: 'A', previous: ['A'] }
-  }
-
-  const strategies = {
-    ouji: { // sringAppend
-      concat: (a, b) => a + b,
-      identity: '',
-      isConflict: (a, b) => a !== b,
-      conflictMerge: (merge, heads) => merge
-    }
   }
 
   t.deepEqual(

@@ -3,7 +3,7 @@ const {
   longestPathLength,
   longestPath,
   buildLongestPathMap
-} = require('../lib/dijkstra')
+} = require('../../lib/dijkstra')
 
 test('dijkstra: simple', t => {
   //     A  (first)
