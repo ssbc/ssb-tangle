@@ -1,6 +1,6 @@
-const Graph = require('./graph')
-const Queue = require('./queue')
-const { Concat } = require('./strategies')
+const Graph = require('../')
+const Queue = require('../../lib/queue')
+const Concat = require('../../strategies/tools/concat')
 
 module.exports = function reduce (entryNode, otherNodes, strategies) {
   const graph = Graph(entryNode, otherNodes)
@@ -57,17 +57,17 @@ module.exports = function reduce (entryNode, otherNodes, strategies) {
           const preMergeTransformations = requiredKeys.map(nodeId => heads.preMerge.get(nodeId))
           const mergeTransformation = graph.getNode(nextId)
 
-          // TODO check if merge is valid and do it!
-          // isValidMerge({ preMergeTransformations, mergeTransformation, strategies })
+          // <----- WIP-start----->
 
-          //
-          // check if conflict
-          // - yes: then do a set ...
-          // - no: auto-merge, and concat
+          // ALGORITHM:
+          // is there a conflict between heads (preMergeTransformations) ?
+          // - yes: do merge of heads, then concat result with mergeTransformation
+          // - no: does mergeTransformation resolves heads conflict?
+          //    - yes: do it (may need to fi
+          //    - no: throw out the merge....
 
-          // this should be per-property in strategy
 
-          // HACKY + WIP
+          // HACKY + fails some cases
           var nextT = {}
           Object.keys(strategies).forEach(prop => {
             nextT[prop] = mergeTransformation[prop]
@@ -78,7 +78,9 @@ module.exports = function reduce (entryNode, otherNodes, strategies) {
             accT: nextT
           })
           // this is a set (over-rides all transformations so far)
-          // and for all properties, which seems wrong
+          // and for all properties, which is wrong because it ignores invalid merges, and over-writes values not named in the merge with identity?
+
+          // <----- WIP-end----->
         }
       }
     })

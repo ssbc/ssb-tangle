@@ -1,3 +1,13 @@
+// NOTES
+// - this is a mutation of dijkstras algorithm to find a **longest** path between two nodes
+// - search for "FOR_LONGEST_PATH" to find lines which make this find longest path
+
+module.exports = {
+  longestPath,
+  longestPathLength,
+  buildLongestPathMap
+}
+
 function longestPath (edgeMap, entryNode, exitNode, opts = {}) {
   const map = opts.dmap || buildLongestPathMap(edgeMap, entryNode)
 
@@ -52,8 +62,10 @@ function buildLongestPathMap (edgeMap, entryNode) {
         // and that record has a better cost (i.e. higher path cost that current proposal)
         // then don't consider this an update, and don't queue up stepping to that node
         if (
-          pathsMap[node] && // already exists
-          (pathsMap[node].cost > currentRecord.cost + cost) // don't have more expensive path
+          // already exists
+          pathsMap[node] &&
+          // don't have more expensive path
+          (pathsMap[node].cost > currentRecord.cost + cost) // FOR_LONGEST_PATH
         ) return
 
         // store or update an entry in the paths map
@@ -66,17 +78,9 @@ function buildLongestPathMap (edgeMap, entryNode) {
         queue.unshift({ node, cost: currentRecord.cost + cost })
       })
 
-    queue.sort((a, b) => a.cost - b.cost)
     // sort lowest to highest cost, so next currentNode is highest-cost
+    queue.sort((a, b) => a.cost - b.cost) // FOR_LONGEST_PATH
   }
 
   return pathsMap
-}
-
-// NOTE - to convert this to dijkstras shortest, flip code on lines 47, 60
-
-module.exports = {
-  longestPath,
-  longestPathLength,
-  buildLongestPathMap
 }

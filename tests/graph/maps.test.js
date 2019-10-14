@@ -1,6 +1,6 @@
 const test = require('tape')
 const get = require('lodash.get')
-const { Map, ReverseMap } = require('../../../lib/graph/maps.js')
+const { Map, ReverseMap } = require('../../graph/maps.js')
 
 test('Map: linear', t => {
   //    A   (first)

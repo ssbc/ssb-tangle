@@ -1,5 +1,5 @@
 const test = require('tape')
-const prune = require('../../../lib/graph/prune-map')
+const prune = require('../../../graph/tools/prune-map')
 
 //      A  (first)
 //     / \

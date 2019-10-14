@@ -1,7 +1,7 @@
 const {
   buildLongestPathMap,
   longestPathLength
-} = require('./dijkstra.js')
+} = require('./dijkstra')
 
 module.exports = function findTimeTravellers (graph, opts = {}) {
   const {

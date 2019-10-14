@@ -1,31 +1,3 @@
-function Concat (strategies) {
-  return function (a, b) {
-    var c = {}
-
-    Object.entries(strategies).forEach(([prop, strategy]) => {
-      c[prop] = strategy.concat(
-        a[prop] || strategy.identity,
-        b[prop] || strategy.identity
-      )
-    })
-
-    return c
-  }
-}
-
-function IsConflict (strategies) {
-  return function (heads) {
-    // heads = an Array of Transformations you're considering merging
-    //         each entry is the accumulated Transformation of each tip of a graph
-
-    return Object.entries(strategies).some(([prop, strategy]) => {
-      return strategy.isConflict(heads)
-    })
-  }
-}
-
-// function isValidTransformation (strategies) {
-
 // WIP
 // TODO - write tests for all these functions
 function isValidMerge (strategies) {
@@ -46,7 +18,5 @@ function isValidMerge (strategies) {
   }
 }
 
-module.exports = {
-  Concat,
-  IsConflict
-}
+// TODO
+// function isValidTransformation (strategies) {

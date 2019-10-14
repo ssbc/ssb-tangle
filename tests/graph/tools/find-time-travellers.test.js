@@ -1,6 +1,6 @@
 const test = require('tape')
-const Graph = require('../../lib/graph')
-const Find = require('../../lib/find-time-travellers.js')
+const Graph = require('../../../graph')
+const Find = require('../../../graph/tools/find-time-travellers.js')
 
 test('find-time-traveller', t => {
   //      A  (first)

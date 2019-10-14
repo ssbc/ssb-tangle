@@ -1,7 +1,7 @@
 const test = require('tape')
-const reduce = require('../../lib/reduce')
+const reduce = require('../../../graph/tools/reduce')
+const OverwriteStrategy = require('../../../strategies/overwrite')
 
-const OverwriteStrategy = require('../../strategies/overwrite')
 const StringAppendStrategy = () => ({ // sringAppend
   concat: (a, b) => a + b,
   identity: '',

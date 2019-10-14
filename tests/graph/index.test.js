@@ -1,5 +1,5 @@
 const test = require('tape')
-const Graph = require('../../../lib/graph')
+const Graph = require('../../graph')
 
 test('Graph', t => {
   //     A   (first)

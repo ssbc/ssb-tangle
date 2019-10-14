@@ -1,5 +1,5 @@
 const set = require('lodash.set')
-const isFirst = require('../is-first')
+const isFirst = require('../lib/is-first')
 
 // map objects which represent forward and backward linking maps of the graph
 

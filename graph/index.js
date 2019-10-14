@@ -1,8 +1,8 @@
 const assert = require('assert').strict
 const { Map, ReverseMap } = require('./maps')
 const Lookup = require('./lookup')
-const pruneMap = require('./prune-map')
-const isFirst = require('../is-first')
+const pruneMap = require('./tools/prune-map')
+const isFirst = require('../lib/is-first')
 
 module.exports = function buildEdgeMap (entryNode, otherNodes, getThread = _getThread) {
   assert(isFirst(entryNode, getThread))
