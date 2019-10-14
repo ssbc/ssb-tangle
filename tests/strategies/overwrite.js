@@ -5,7 +5,7 @@ test('overwrite strategy', t => {
   const strategy = Strategy()
   const {
     identity,
-    buildTransformation,
+    Transformation,
     isTransformation,
     concat,
     isConflict,
@@ -19,7 +19,7 @@ test('overwrite strategy', t => {
     'hello',
     'bart was here',
     ''
-  ].map(buildTransformation)
+  ].map(Transformation)
   Ts.push(identity)
 
   t.true(Ts.every(isTransformation), 'validates transformations')
@@ -39,9 +39,9 @@ test('overwrite strategy', t => {
     'associativity'
   )
 
-  const A = () => buildTransformation('dog')
-  const B = () => buildTransformation('cat')
-  const C = () => buildTransformation('cat-dog') // our merge message
+  const A = () => Transformation('dog')
+  const B = () => Transformation('cat')
+  const C = () => Transformation('cat-dog') // our merge message
 
   // check whether there's any conflict between n heads
   t.equal(isConflict([A(), A()]), false, 'no conflict')

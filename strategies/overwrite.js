@@ -1,20 +1,23 @@
 const isEqual = require('lodash.isequal')
+const assert = require('assert').strict
 
 function OverwriteStrategy () {
   const IDENTITY = null
 
   function concat (a, b) {
-    if (!isTransformation(a)) throw new Error('cannot concat invalid transformations')
-    if (!isTransformation(b)) throw new Error('cannot concat invalid transformations')
+    if (!isTransformation(a)) throw new Error('cannot concat invalid transformation', a)
+    if (!isTransformation(b)) throw new Error('cannot concat invalid transformation', b)
 
     if (b === IDENTITY) return a
     return b
   }
 
   function isConflict (heads) {
+    assert(Array.isArray(heads))
+
     // try merging the heads together checking commutative at each step
-    // e.g. if (A*B) === (B*A) then these can be merged
-    // then check if (A*B)*C === C*(A*B) etc.
+    // e.g. if (a*b) === (b*a) then these can be merged
+    // then check if (a*b)*c === c*(a*b) etc.
     // as long as set is associative with concat, then checking like this
     // means we are checking all possible permutations of head merging
 
@@ -31,51 +34,57 @@ function OverwriteStrategy () {
   }
 
   function isValidMerge (heads, merge) {
+    assert(Array.isArray(heads))
+
     if (isConflict(heads)) return merge !== IDENTITY
     // there's a conflict across the heads the merge MUST resolve
 
-    else return true
+    return true
     // can apply all changes
   }
 
   function merge (heads, merge) {
+    assert(Array.isArray(heads))
+
     // this is a crude merge strategy - the merge message over-writes all history to date
     // in this strategy that's totally fine.
     // In other cases ideally the merge message is a "patch" which replaces only the
     // branched section of the graph
 
     // if (isConflict(heads)) return merge
-    // TODO check all permutations of heads!
+    // TODO check all permutations of heads !
 
     return merge
   }
 
-  function buildTransformation (string) {
-    if (string === null) return null
-
-    return { type: '>', payload: string }
-  }
-
-  function isTransformation (T) {
-    // replace with JSON-schema validator
-    if (T === null) return true
-
-    if (typeof T !== 'object') return false
-    if (T.type !== '>') return false
-    if (typeof T.payload !== 'string') return false
-
-    return true
-  }
-
   return {
     identity: IDENTITY,
-    buildTransformation,
+    Transformation,
     isTransformation,
     concat,
     isConflict,
     isValidMerge,
     merge
     // resolve // (act)
+  }
+}
+
+function Transformation (content) {
+  if (content === undefined) return null
+
+  return content
+}
+
+function isTransformation (T) {
+  if (T === null) return true
+
+  switch (typeof T) {
+    case 'string': return true
+    case 'object': return true
+    case 'number': return true
+    case 'boolean': return true
+    default:
+      return false
   }
 }
 
