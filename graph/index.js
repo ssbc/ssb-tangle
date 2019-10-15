@@ -6,15 +6,16 @@ const isFirst = require('../lib/is-first')
 
 module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
   const {
-    getThread = _getThread
+    getThread = _getThread,
+    getTransformation = _getTransformation
   } = opts
 
   assert(isFirst(entryNode, getThread))
   assert(Array.isArray(otherNodes))
   assert(typeof getThread === 'function')
 
-  // build map of each hop which runs forward causally
   var map = Map(otherNodes, getThread)
+  // build map of each hop which runs forward causally
   var reverseMap = ReverseMap(map)
   // and the inverse
 
@@ -23,34 +24,35 @@ module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
   return {
     getNode: lookup.getNode,
     getEntryNode: () => entryNode,
-    getLinks: (key) => {
-      if (!map.hasOwnProperty(key)) return []
-      return Object.keys(map[key])
+    getTransformation: (nodeId) => getTransformation(lookup.getNode(nodeId)),
+    getLinks: (nodeId) => {
+      if (!map.hasOwnProperty(nodeId)) return []
+      return Object.keys(map[nodeId])
     },
-    getReverseLinks: (key) => {
-      if (!reverseMap.hasOwnProperty(key)) return []
-      return Object.keys(reverseMap[key])
-    },
-
-    isBranchNode: (key) => {
-      if (!map.hasOwnProperty(key)) return false
-      return Object.keys(map[key]).length > 1
-    },
-    isMergeNode: (key) => {
-      if (!reverseMap.hasOwnProperty(key)) return false
-      return Object.keys(reverseMap[key]).length > 1
-    },
-    isHeadNode: (key) => {
-      if (!lookup.getNode(key)) return false
-      if (!map.hasOwnProperty(key)) return true
-      return Object.keys(map[key]).length === 0
+    getReverseLinks: (nodeId) => {
+      if (!reverseMap.hasOwnProperty(nodeId)) return []
+      return Object.keys(reverseMap[nodeId])
     },
 
-    prune: (invalidKeys) => {
-      map = pruneMap(map, entryNode.key, invalidKeys)
+    isBranchNode: (nodeId) => {
+      if (!map.hasOwnProperty(nodeId)) return false
+      return Object.keys(map[nodeId]).length > 1
+    },
+    isMergeNode: (nodeId) => {
+      if (!reverseMap.hasOwnProperty(nodeId)) return false
+      return Object.keys(reverseMap[nodeId]).length > 1
+    },
+    isHeadNode: (nodeId) => {
+      if (!lookup.getNode(nodeId)) return false
+      if (!map.hasOwnProperty(nodeId)) return true
+      return Object.keys(map[nodeId]).length === 0
+    },
+
+    prune: (invalidIds) => {
+      map = pruneMap(map, entryNode.key, invalidIds)
       reverseMap = ReverseMap(map)
 
-      // TODO pruneLookup ?
+      // TODO ? pruneLookup
     },
 
     getRaw: () => {
@@ -61,4 +63,8 @@ module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
 
 function _getThread (node) {
   return node.thread
+}
+
+function _getTransformation (node) {
+  return node
 }

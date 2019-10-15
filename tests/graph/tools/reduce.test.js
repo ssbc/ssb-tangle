@@ -122,6 +122,43 @@ test('reduce (custom getThread)', t => {
   t.end()
 })
 
+test('reduce (custom getTransformation)', t => {
+  //   A   (first)
+  //   |
+  //   B
+
+  const A = {
+    key: 'A',
+    thread: { first: null, previous: null },
+    mutations: {
+      title: strategies.title.Transformation('my first message'),
+      ouji: 'hello'
+    }
+  }
+  const B = {
+    key: 'B',
+    thread: { first: 'A', previous: ['A'] },
+    mutations: {
+      ouji: ' mix'
+    }
+  }
+
+  const getTransformation = node => node.mutations
+
+  t.deepEqual(
+    reduce(A, [B], strategies, { getTransformation }),
+    {
+      B: {
+        title: strategies.title.Transformation('my first message'),
+        ouji: 'hello mix'
+      }
+    },
+    'custom getTransformation works'
+  )
+
+  t.end()
+})
+
 test('reduce (invalid merge)', t => {
   //     A   (first)
   //    / \

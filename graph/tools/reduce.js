@@ -3,8 +3,11 @@ const Queue = require('../../lib/queue')
 const Concat = require('../../strategies/tools/concat')
 
 module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) {
-  const { getThread } = opts
-  const graph = Graph(entryNode, otherNodes, { getThread })
+  const {
+    getThread,
+    getTransformation
+  } = opts
+  const graph = Graph(entryNode, otherNodes, { getThread, getTransformation })
 
   // TODO prune time-travllers
   // TODO write strategies validation
@@ -27,7 +30,7 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
 
   queue.add({
     nodeId: entryNode.key,
-    accT: concat(initialT, graph.getNode(entryNode.key))
+    accT: concat(initialT, graph.getTransformation(entryNode.key))
   })
 
   while (!queue.isEmpty()) {
@@ -44,7 +47,7 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
       if (!graph.isMergeNode(nextId)) {
         queue.add({
           nodeId: nextId,
-          accT: concat(accT, graph.getNode(nextId))
+          accT: concat(accT, graph.getTransformation(nextId))
         })
         // queue up the another node to explore from
       } else {
@@ -55,8 +58,8 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
         // check heads.preMerge store to see if we now have the state needed to complete merge
 
         if (ready) {
-          const preMergeTransformations = requiredKeys.map(nodeId => heads.preMerge.get(nodeId))
-          const mergeTransformation = graph.getNode(nextId)
+          // const preMergeTransformations = requiredKeys.map(nodeId => heads.preMerge.get(nodeId))
+          const mergeTransformation = graph.getTransformation(nextId)
 
           // <----- WIP-start----->
 
@@ -66,7 +69,6 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
           // - no: does mergeTransformation resolves heads conflict?
           //    - yes: do it (may need to fi
           //    - no: throw out the merge....
-
 
           // HACKY + fails some cases
           var nextT = {}

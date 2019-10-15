@@ -13,16 +13,16 @@ module.exports = function findTimeTravellers (graph, opts = {}) {
 
   var authorLedger = AuthorLedger()
   var queue = [graph.getEntryNode().key]
-  var key, node, author
+  var nodeId, node, author
 
   while (queue.length) {
-    key = queue.shift()
-    node = graph.getNode(key)
+    nodeId = queue.shift()
+    node = graph.getNode(nodeId)
     author = getAuthor(node)
 
-    authorLedger.add(author, { key, seq: getSeq(node), d: getLongestPath(key) })
+    authorLedger.add(author, { nodeId, seq: getSeq(node), dist: getLongestPath(nodeId) })
 
-    graph.getLinks(key).forEach(key => queue.push(key))
+    graph.getLinks(nodeId).forEach(nodeId => queue.push(nodeId))
   }
 
   return reviewLedger(authorLedger)
@@ -31,7 +31,7 @@ module.exports = function findTimeTravellers (graph, opts = {}) {
 function AuthorLedger () {
   var ledger = {}
   // for each author, for each message they posted, collect into an array
-  // { key, seq, d: longest distance to that message }
+  // { nodeId, seq, dist: longest distance to that message }
 
   return {
     add: (author, record) => {
@@ -44,12 +44,12 @@ function AuthorLedger () {
 
 function GetLongestPath (graph) {
   const { map } = graph.getRaw()
-  const entryKey = graph.getEntryNode().key
+  const entryId = graph.getEntryNode().key
 
-  const dmap = buildLongestPathMap(map, entryKey)
+  const dmap = buildLongestPathMap(map, entryId)
 
-  return function longestPath (exitKey) {
-    return longestPathLength(map, entryKey, exitKey, { dmap })
+  return function longestPath (exitId) {
+    return longestPathLength(map, entryId, exitId, { dmap })
   }
 }
 
@@ -61,10 +61,10 @@ function reviewLedger (authorLedger) {
       .sort((a, b) => a.seq - b.seq) // sort for ascending seq
       .forEach((nodeData, i, arr) => {
         if (i === 0) return
-        if (nodeData.d > arr[i - 1].d) return
+        if (nodeData.dist > arr[i - 1].dist) return
 
         // distance from root did not increase, therefore time-traveller found
-        timeTravellers.push(nodeData.key)
+        timeTravellers.push(nodeData.nodeId)
       })
   })
 

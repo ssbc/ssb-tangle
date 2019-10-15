@@ -1,48 +1,48 @@
 const clone = require('lodash.clone')
 const assert = require('assert').strict
 
-module.exports = function pruneEdgeMap (map, entryKey, invalidKeys) {
-  assert(typeof entryKey === 'string')
-  assert(Array.isArray(invalidKeys))
+module.exports = function pruneEdgeMap (map, entryId, invalidIds) {
+  assert(typeof entryId === 'string')
+  assert(Array.isArray(invalidIds))
 
-  var allInvalidKeys = new Set(invalidKeys)
+  var allInvalidIds = new Set(invalidIds)
 
-  var queue = [entryKey]
-  var key
+  var queue = [entryId]
+  var nodeId
 
   while (queue.length) {
-    key = queue.pop()
-    if (!map.hasOwnProperty(key)) continue
+    nodeId = queue.pop()
+    if (!map.hasOwnProperty(nodeId)) continue
 
-    if (allInvalidKeys.has(key)) {
-      forEach(map[key], key => {
-        allInvalidKeys.add(key)
-        queue.push(key)
+    if (allInvalidIds.has(nodeId)) {
+      forEachKey(map[nodeId], nodeId => {
+        allInvalidIds.add(nodeId)
+        queue.push(nodeId)
       })
     } else {
-      forEach(map[key], key => queue.push(key))
+      forEachKey(map[nodeId], nodeId => queue.push(nodeId))
     }
   }
 
   var newMap = clone(map)
 
   // remove the top level invalid nodes
-  allInvalidKeys.forEach(key => delete newMap[key])
+  allInvalidIds.forEach(nodeId => delete newMap[nodeId])
 
   // remove the links to any invalid nodes
-  forEach(newMap, key => {
-    forEach(newMap[key], subKey => {
-      if (allInvalidKeys.has(subKey)) delete newMap[key][subKey]
+  forEachKey(newMap, fromNodeId => {
+    forEachKey(newMap[fromNodeId], toNodeId => {
+      if (allInvalidIds.has(toNodeId)) delete newMap[fromNodeId][toNodeId]
     })
 
     // remove a map item if it has no remaining valid links
-    if (isEmpty(newMap[key])) delete newMap[key]
+    if (isEmpty(newMap[fromNodeId])) delete newMap[fromNodeId]
   })
 
   return newMap
 }
 
-function forEach (object, cb) {
+function forEachKey (object, cb) {
   Object.keys(object).forEach(key => cb(key))
 }
 

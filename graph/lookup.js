@@ -1,3 +1,19 @@
+// makes two dictionaries, one for connected nodes, one for disconnected
+// each dictionary maps nodeId -> node (where nodeId is unique idenentifier for node)
+
+// e.g.
+//
+//    A   (first)
+//    |
+//    B           J? (K points backto this but we don't have it)
+//    |           |
+//    C           K
+//
+// lookup = {
+//   connected: { A, B, C },
+//   disconnected: { J: null, K }
+// }
+
 module.exports = function Lookup (map, entryNode, otherNodes) {
   var connected = {}
   var disconnected = {}

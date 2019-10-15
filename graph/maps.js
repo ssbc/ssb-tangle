@@ -2,6 +2,19 @@ const set = require('lodash.set')
 const isFirst = require('../lib/is-first')
 
 // map objects which represent forward and backward linking maps of the graph
+// e.g.
+//
+//     A   (first)
+//    / \
+//   B   C
+//    \ /
+//     D
+//
+// map = {
+//   A: { B: 1, C: 1 },
+//   B: { D: 1 },
+//   C: { D: 1 }
+// }
 
 module.exports = {
   Map,
