@@ -81,6 +81,47 @@ test('reduce', t => {
   t.end()
 })
 
+test('reduce (custom getThread)', t => {
+  //   A   (first)
+  //   |
+  //   B
+
+  const A = {
+    key: 'A',
+    tangles: {
+      conversation: [null, null]
+    },
+    title: strategies.title.Transformation('my first message'),
+    ouji: 'hello'
+  }
+  const B = {
+    key: 'B',
+    tangles: {
+      conversation: ['A', ['A']]
+    },
+    ouji: ' mix'
+  }
+
+  const getThread = node => {
+    const [ first, previous ] = node.tangles.conversation
+
+    return { first, previous }
+  }
+
+  t.deepEqual(
+    reduce(A, [B], strategies, { getThread }),
+    {
+      B: {
+        title: strategies.title.Transformation('my first message'),
+        ouji: 'hello mix'
+      }
+    },
+    'custome getThread works'
+  )
+
+  t.end()
+})
+
 test('reduce (invalid merge)', t => {
   //     A   (first)
   //    / \

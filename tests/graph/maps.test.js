@@ -2,6 +2,8 @@ const test = require('tape')
 const get = require('lodash.get')
 const { Map, ReverseMap } = require('../../graph/maps.js')
 
+const getThread = node => node.thread
+
 test('Map: linear', t => {
   //    A   (first)
   //    |
@@ -18,8 +20,8 @@ test('Map: linear', t => {
     B: { C: 1 }
   }
 
-  t.deepEqual(Map([A, B, C]), expectedMap, 'simple linear')
-  t.deepEqual(Map([A, C, B]), expectedMap, 'simple linear (order agnostic)')
+  t.deepEqual(Map([A, B, C], getThread), expectedMap, 'simple linear')
+  t.deepEqual(Map([C, B], getThread), expectedMap, 'simple linear (order agnostic)')
 
   // ## message in-thread but "dangling" (doesn't link up to known messages)
   //
@@ -38,7 +40,7 @@ test('Map: merge', t => {
   const C = { key: 'C', thread: { first: 'A', previous: ['A'] } }
   const D = { key: 'D', thread: { first: 'A', previous: ['B', 'C'] } }
 
-  const map = Map([A, D, B, C])
+  const map = Map([A, D, B, C], getThread)
 
   const expectedMap = {
     A: { B: 1, C: 1 },
@@ -82,7 +84,7 @@ test('Map: dangle', t => {
     B: { C: 1 },
     J: { K: 1 }
   }
-  t.deepEqual(Map([A, B, C, K]), expectedMap, 'dangles')
+  t.deepEqual(Map([A, B, C, K], getThread), expectedMap, 'dangles')
 
   t.end()
 })
@@ -105,7 +107,7 @@ test('Map: non-thread dangles', t => {
     S: { Q: 1 }
   }
 
-  t.deepEqual(Map([A, B, C, Q]), expectedMap, 'out of thread messages')
+  t.deepEqual(Map([A, B, C, Q], getThread), expectedMap, 'out of thread messages')
   t.end()
 })
 
@@ -140,7 +142,7 @@ test('Map: complex merge', t => {
     H: { I: 1 }
   }
 
-  t.deepEqual(Map([A, B, C, C, D, E, F, G, G, H, I]), expectedMap, 'ugly graph')
+  t.deepEqual(Map([A, B, C, C, D, E, F, G, G, H, I], getThread), expectedMap, 'ugly graph')
 
   t.end()
 })
@@ -163,9 +165,8 @@ test('Map: custom thread path', t => {
     A: { B: 1, C: 1 }
   }
 
-  // const getThead = node => node.threads.gathering
-  const getThead = node => get(node, 'threads.gathering')
-  t.deepEqual(Map([A, B, C], getThead), expectedMap, 'custom thread path')
+  const getThread = node => get(node, 'threads.gathering')
+  t.deepEqual(Map([A, B, C], getThread), expectedMap, 'custom thread path')
 
   t.end()
 })

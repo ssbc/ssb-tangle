@@ -8,7 +8,7 @@ module.exports = {
   ReverseMap
 }
 
-function Map (otherNodes, getThread = _getThread) {
+function Map (otherNodes, getThread) {
   var map = {}
 
   otherNodes
@@ -36,8 +36,4 @@ function ReverseMap (map) {
 
 function forEach (obj, cb) {
   Object.entries(obj).forEach(cb)
-}
-
-function _getThread (node) {
-  return node.thread
 }

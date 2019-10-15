@@ -4,7 +4,11 @@ const Lookup = require('./lookup')
 const pruneMap = require('./tools/prune-map')
 const isFirst = require('../lib/is-first')
 
-module.exports = function buildEdgeMap (entryNode, otherNodes, getThread = _getThread) {
+module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
+  const {
+    getThread = _getThread
+  } = opts
+
   assert(isFirst(entryNode, getThread))
   assert(Array.isArray(otherNodes))
   assert(typeof getThread === 'function')

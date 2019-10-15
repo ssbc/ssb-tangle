@@ -2,8 +2,9 @@ const Graph = require('../')
 const Queue = require('../../lib/queue')
 const Concat = require('../../strategies/tools/concat')
 
-module.exports = function reduce (entryNode, otherNodes, strategies) {
-  const graph = Graph(entryNode, otherNodes)
+module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) {
+  const { getThread } = opts
+  const graph = Graph(entryNode, otherNodes, { getThread })
 
   // TODO prune time-travllers
   // TODO write strategies validation
@@ -78,7 +79,7 @@ module.exports = function reduce (entryNode, otherNodes, strategies) {
             accT: nextT
           })
           // this is a set (over-rides all transformations so far)
-          // and for all properties, which is wrong because it ignores invalid merges, and over-writes values not named in the merge with identity?
+          // and for all properties, which is wrong because it ignores invalid merges, and over-writes un-named values with identity
 
           // <----- WIP-end----->
         }
