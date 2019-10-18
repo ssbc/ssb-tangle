@@ -1,20 +1,21 @@
 const Graph = require('../graph')
 const Queue = require('../lib/queue')
-const Compose = require('../strategy/compose')
 
-module.exports = function reduce (entryNode, otherNodes, composition, opts = {}) {
-  // composition is is an Object which maps fieldName -> strategy
+module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
   const {
     getThread,
-    getTransformation = GetTransformation(composition)
+    getTransformation = i => i
   } = opts
   const graph = Graph(entryNode, otherNodes, { getThread })
 
   // TODO prune time-travllers
 
-  // TODO change reduce to take Compose(composition)
-  const { concat } = Compose(composition)
-  const getT = (nodeId) => getTransformation(graph.getNode(nodeId))
+  const { concat, nakedTransformation } = strategy
+  const getT = (nodeId) => {
+    return nakedTransformation(
+      getTransformation(graph.getNode(nodeId))
+    )
+  }
 
   var queue = new Queue()
   // a queue made up of elements { nodeId, accT }
@@ -78,18 +79,12 @@ module.exports = function reduce (entryNode, otherNodes, composition, opts = {})
           //  intended direction:
           //  - build ComposeRule(composition), which has concat+merge methods
 
-          // HACKY + fails some cases
-          var nextT = {}
-          Object.keys(composition).forEach(field => {
-            nextT[field] = mergeTransformation[field]
-          })
-
           queue.add({
             nodeId: nextId,
             // accT: nextT
             accT: mergeTransformation
           })
-          // this is a set (over-rides all transformations so far)
+          // this just treats merge like an overwrite (ignoring all transformations so far)
           // and for all properties, which is wrong because it ignores invalid merges, and over-writes un-named values with identity
 
           // <----- WIP-end----->
@@ -99,17 +94,4 @@ module.exports = function reduce (entryNode, otherNodes, composition, opts = {})
   }
 
   return heads.terminal
-}
-
-function GetTransformation (composition) {
-  return function (node) {
-    var t = {}
-
-    Object.entries(composition).forEach(([field, strategy]) => {
-      if (node.hasOwnProperty(field)) t[field] = node[field]
-      else t[field] = strategy.identity()
-    })
-
-    return t
-  }
 }

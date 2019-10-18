@@ -1,8 +1,9 @@
 const test = require('tape')
 const reduce = require('../../graph-tools/reduce')
-const OverwriteRule = require('../../strategy/overwrite')
+const OverwriteStrategy = require('../../strategy/overwrite')
+const Strategy = require('../../strategy/compose')
 
-const StringAppendRule = () => ({ // stringAppend
+const StringAppendStrategy = () => ({ // stringAppend
   concat: (a, b) => a + b,
   identity: () => '',
   isConflict: (a, b) => a !== b,
@@ -10,10 +11,10 @@ const StringAppendRule = () => ({ // stringAppend
   reify: a => a
 })
 
-const composition = {
-  title: OverwriteRule(),
-  ouji: StringAppendRule()
-}
+const strategy = Strategy({
+  title: OverwriteStrategy(),
+  ouji: StringAppendStrategy()
+})
 // TODO change reduce to take compose(composition)
 
 function titleTransformation (val) {
@@ -44,7 +45,7 @@ test('reduce', t => {
   }
 
   t.deepEqual(
-    reduce(A, [B, C], composition),
+    reduce(A, [B, C], strategy),
     {
       B: {
         title: titleTransformation('my root message'),
@@ -74,7 +75,7 @@ test('reduce', t => {
   // with the title + ouji properties
 
   t.deepEqual(
-    reduce(A, [B, C, D], composition),
+    reduce(A, [B, C, D], strategy),
     {
       D: {
         title: titleTransformation('edited and merged!'),
@@ -115,7 +116,7 @@ test('reduce (custom getThread)', t => {
   }
 
   t.deepEqual(
-    reduce(A, [B], composition, { getThread }),
+    reduce(A, [B], strategy, { getThread }),
     {
       B: {
         title: titleTransformation('my root message'),
@@ -152,7 +153,7 @@ test('reduce (custom getTransformation)', t => {
   const getTransformation = node => node.mutations
 
   t.deepEqual(
-    reduce(A, [B], composition, { getTransformation }),
+    reduce(A, [B], strategy, { getTransformation }),
     {
       B: {
         title: titleTransformation('my root message'),
@@ -192,14 +193,14 @@ test('reduce (invalid merge)', { todo: true }, t => {
   const Dud = {
     key: 'D',
     thread: { root: 'A', previous: ['B', 'C'] },
-    title: titleTransformation('edited and merged!'),
-    ouji: composition.ouji.identity()
+    title: titleTransformation('edited and merged!')
+    // ouji: identity()
   }
   // this is an invalid merge message because Dud fails to resolve conflict between B + C
   // on the 'ouji' property
 
   t.deepEqual(
-    reduce(A, [B, C, Dud], composition),
+    reduce(A, [B, C, Dud], strategy),
     {
       B: {
         title: titleTransformation('my root message'),
@@ -258,7 +259,7 @@ test('reduce (automerge)', { todo: true }, t => {
   // - 'ouji' transformations are in conflict, but a resolution is declared
 
   t.deepEqual(
-    reduce(A, [B, C, D, E], composition),
+    reduce(A, [B, C, D, E], strategy),
     {
       E: {
         title: titleTransformation('my root message'),
