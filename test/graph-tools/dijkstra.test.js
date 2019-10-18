@@ -3,10 +3,10 @@ const {
   longestPathLength,
   longestPath,
   buildLongestPathMap
-} = require('../../../graph/tools/dijkstra')
+} = require('../../graph-tools/dijkstra')
 
 test('dijkstra: simple', t => {
-  //     A  (first)
+  //     A  (root)
   //    / \
   //   B   C
   //   |   |
@@ -36,7 +36,7 @@ test('dijkstra: simple', t => {
 })
 
 test('dijkstra: more complex', t => {
-  //     A  (first)
+  //     A  (root)
   //    / \
   //   B   C
   //   |  /|\

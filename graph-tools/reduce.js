@@ -1,25 +1,30 @@
-const Graph = require('../')
-const Queue = require('../../lib/queue')
-const Concat = require('../../strategies/tools/concat')
+const Graph = require('../graph')
+const Queue = require('../lib/queue')
+const Compose = require('../strategy/compose')
 
-module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) {
+module.exports = function reduce (entryNode, otherNodes, composition, opts = {}) {
+  // composition is is an Object which maps fieldName -> strategy
   const {
     getThread,
-    getTransformation
+    getTransformation = GetTransformation(composition)
   } = opts
-  const graph = Graph(entryNode, otherNodes, { getThread, getTransformation })
+  const graph = Graph(entryNode, otherNodes, { getThread })
 
   // TODO prune time-travllers
-  // TODO write strategies validation
 
-  const initialT = getInitialTransformation(strategies)
-  const concat = Concat(strategies)
+  // TODO change reduce to take Compose(composition)
+  const { concat } = Compose(composition)
+  const getT = (nodeId) => getTransformation(graph.getNode(nodeId))
 
   var queue = new Queue()
   // a queue made up of elements { nodeId, accT }
   //   nodeId = the unique identifier for a node
   //   accT = the accumulated (concat'd) Transformation up to and including the Transformation
   //          described in node 'nodeId'
+  queue.add({
+    nodeId: entryNode.key,
+    accT: getT(entryNode.key)
+  })
 
   var heads = {
     preMerge: new Map(),
@@ -27,11 +32,6 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
     // which describes the nodes immediately preceeding a merge-node
     terminal: {}
   }
-
-  queue.add({
-    nodeId: entryNode.key,
-    accT: concat(initialT, graph.getTransformation(entryNode.key))
-  })
 
   while (!queue.isEmpty()) {
     var { nodeId, accT } = queue.next()
@@ -47,7 +47,7 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
       if (!graph.isMergeNode(nextId)) {
         queue.add({
           nodeId: nextId,
-          accT: concat(accT, graph.getTransformation(nextId))
+          accT: concat(accT, getT(nextId))
         })
         // queue up the another node to explore from
       } else {
@@ -58,27 +58,36 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
         // check heads.preMerge store to see if we now have the state needed to complete merge
 
         if (ready) {
-          // const preMergeTransformations = requiredKeys.map(nodeId => heads.preMerge.get(nodeId))
-          const mergeTransformation = graph.getTransformation(nextId)
-
           // <----- WIP-start----->
+          console.warn('! WARNING ! - reducing merges safely is not yet fully working')
+          // const preMergeTransformations = requiredKeys.map(nodeId => heads.preMerge.get(nodeId))
+          const mergeTransformation = getT(nextId)
 
           // ALGORITHM:
           // is there a conflict between heads (preMergeTransformations) ?
-          // - yes: do merge of heads, then concat result with mergeTransformation
-          // - no: does mergeTransformation resolves heads conflict?
-          //    - yes: do it (may need to fi
+          // - no: concat the heads, then concat result with mergeTransformation
+          // - yes: does mergeTransformation resolves heads conflict?
+          //    - yes: do it (TODO decide what merge is in the case of composition other than overwrite
           //    - no: throw out the merge....
+          //
+          //  functions needed:
+          //  - [x] IsConflict(composition)(heads)
+          //  - [x] Concat(composition)(heads)
+          //  - [ ] IsValidMerge
+          //
+          //  intended direction:
+          //  - build ComposeRule(composition), which has concat+merge methods
 
           // HACKY + fails some cases
           var nextT = {}
-          Object.keys(strategies).forEach(prop => {
-            nextT[prop] = mergeTransformation[prop]
+          Object.keys(composition).forEach(field => {
+            nextT[field] = mergeTransformation[field]
           })
 
           queue.add({
             nodeId: nextId,
-            accT: nextT
+            // accT: nextT
+            accT: mergeTransformation
           })
           // this is a set (over-rides all transformations so far)
           // and for all properties, which is wrong because it ignores invalid merges, and over-writes un-named values with identity
@@ -92,12 +101,15 @@ module.exports = function reduce (entryNode, otherNodes, strategies, opts = {}) 
   return heads.terminal
 }
 
-function getInitialTransformation (strategies) {
-  var state = {}
+function GetTransformation (composition) {
+  return function (node) {
+    var t = {}
 
-  Object.entries(strategies).forEach(([prop, strategy]) => {
-    state[prop] = strategy.identity
-  })
+    Object.entries(composition).forEach(([field, strategy]) => {
+      if (node.hasOwnProperty(field)) t[field] = node[field]
+      else t[field] = strategy.identity()
+    })
 
-  return state
+    return t
+  }
 }

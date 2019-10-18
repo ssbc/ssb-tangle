@@ -5,15 +5,15 @@ const { Map, ReverseMap } = require('../../graph/maps.js')
 const getThread = node => node.thread
 
 test('Map: linear', t => {
-  //    A   (first)
+  //    A   (root)
   //    |
   //    B
   //    |
   //    C
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['B'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['B'] } }
 
   const expectedMap = {
     A: { B: 1 },
@@ -29,16 +29,16 @@ test('Map: linear', t => {
 })
 
 test('Map: merge', t => {
-  //     A   (first)
+  //     A   (root)
   //    / \
   //   B   C
   //    \ /
   //     D
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['A'] } }
-  const D = { key: 'D', thread: { first: 'A', previous: ['B', 'C'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['A'] } }
+  const D = { key: 'D', thread: { root: 'A', previous: ['B', 'C'] } }
 
   const map = Map([A, D, B, C], getThread)
 
@@ -68,16 +68,16 @@ test('ReverseMap: merge', t => {
 })
 
 test('Map: dangle', t => {
-  //    A   (first)
+  //    A   (root)
   //    |
   //    B     ----?--- J? (a message we don't have)
   //    |              |
   //    C              K
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['B'] } }
-  const K = { key: 'K', thread: { first: 'A', previous: ['J'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['B'] } }
+  const K = { key: 'K', thread: { root: 'A', previous: ['J'] } }
 
   const expectedMap = {
     A: { B: 1 },
@@ -90,16 +90,16 @@ test('Map: dangle', t => {
 })
 
 test('Map: non-thread dangles', t => {
-  //    A (first)           R?  (first, some other thread)
+  //    A (root)           R?  (root, some other thread)
   //    |                   ?
   //    B                   S (a message we don't have)
   //    |                   |
   //    C                   Q
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['B'] } }
-  const Q = { key: 'Q', thread: { first: 'R', previous: ['S'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['B'] } }
+  const Q = { key: 'Q', thread: { root: 'R', previous: ['S'] } }
 
   const expectedMap = {
     A: { B: 1 },
@@ -112,7 +112,7 @@ test('Map: non-thread dangles', t => {
 })
 
 test('Map: complex merge', t => {
-  //      A  (first)
+  //      A  (root)
   //     / \
   //    B   C
   //   /   / \
@@ -122,15 +122,15 @@ test('Map: complex merge', t => {
   //    |
   //    I
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['A'] } }
-  const D = { key: 'D', thread: { first: 'A', previous: ['B'] } }
-  const E = { key: 'E', thread: { first: 'A', previous: ['C'] } }
-  const F = { key: 'F', thread: { first: 'A', previous: ['C'] } }
-  const H = { key: 'H', thread: { first: 'A', previous: ['D', 'E'] } }
-  const G = { key: 'G', thread: { first: 'A', previous: ['F'] } }
-  const I = { key: 'I', thread: { first: 'A', previous: ['H'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['A'] } }
+  const D = { key: 'D', thread: { root: 'A', previous: ['B'] } }
+  const E = { key: 'E', thread: { root: 'A', previous: ['C'] } }
+  const F = { key: 'F', thread: { root: 'A', previous: ['C'] } }
+  const H = { key: 'H', thread: { root: 'A', previous: ['D', 'E'] } }
+  const G = { key: 'G', thread: { root: 'A', previous: ['F'] } }
+  const I = { key: 'I', thread: { root: 'A', previous: ['H'] } }
 
   const expectedMap = {
     A: { B: 1, C: 1 },
@@ -148,18 +148,18 @@ test('Map: complex merge', t => {
 })
 
 test('Map: custom thread path', t => {
-  //      A  (first)
+  //      A  (root)
   //     / \
   //    B   C
 
   const A = {
     key: 'A',
     threads: {
-      gathering: { first: null, previous: null }
+      gathering: { root: null, previous: null }
     }
   }
-  const B = { key: 'B', threads: { gathering: { first: 'A', previous: ['A'] } } }
-  const C = { key: 'C', threads: { gathering: { first: 'A', previous: ['A'] } } }
+  const B = { key: 'B', threads: { gathering: { root: 'A', previous: ['A'] } } }
+  const C = { key: 'C', threads: { gathering: { root: 'A', previous: ['A'] } } }
 
   const expectedMap = {
     A: { B: 1, C: 1 }

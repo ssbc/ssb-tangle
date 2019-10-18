@@ -1,7 +1,7 @@
 const clone = require('lodash.clone')
 const assert = require('assert').strict
 
-module.exports = function pruneEdgeMap (map, entryId, invalidIds) {
+module.exports = function pruneMap (map, entryId, invalidIds) {
   assert(typeof entryId === 'string')
   assert(Array.isArray(invalidIds))
 

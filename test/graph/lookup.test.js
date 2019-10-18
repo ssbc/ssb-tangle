@@ -7,16 +7,16 @@ const getThread = node => node.thread
 test('Lookup', t => {
   // ## message in-thread but "dangling" (doesn't link up to known messages)
   //
-  //    A   (first)
+  //    A   (root)
   //    |
   //    B     ----?--- J? (a message we don't have)
   //    |              |
   //    C              K
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['B'] } }
-  const K = { key: 'K', thread: { first: 'A', previous: ['J'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['B'] } }
+  const K = { key: 'K', thread: { root: 'A', previous: ['J'] } }
 
   const map = Map([A, B, K, C], getThread)
 

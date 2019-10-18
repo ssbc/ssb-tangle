@@ -1,10 +1,10 @@
 const set = require('lodash.set')
-const isFirst = require('../lib/is-first')
+const isRoot = require('../lib/is-root')
 
 // map objects which represent forward and backward linking maps of the graph
 // e.g.
 //
-//     A   (first)
+//     A   (root)
 //    / \
 //   B   C
 //    \ /
@@ -25,7 +25,7 @@ function Map (otherNodes, getThread) {
   var map = {}
 
   otherNodes
-    .filter(node => !isFirst(node, getThread))
+    .filter(node => !isRoot(node, getThread))
     .forEach(node => {
       getThread(node).previous.forEach(backlink => {
         set(map, [backlink, node.key], 1)

@@ -1,16 +1,15 @@
 const assert = require('assert').strict
 const { Map, ReverseMap } = require('./maps')
 const Lookup = require('./lookup')
-const pruneMap = require('./tools/prune-map')
-const isFirst = require('../lib/is-first')
+const pruneMap = require('./prune-map')
+const isRoot = require('../lib/is-root')
 
 module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
   const {
-    getThread = _getThread,
-    getTransformation = _getTransformation
+    getThread = _getThread
   } = opts
 
-  assert(isFirst(entryNode, getThread))
+  assert(isRoot(entryNode, getThread))
   assert(Array.isArray(otherNodes))
   assert(typeof getThread === 'function')
 
@@ -24,7 +23,6 @@ module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
   return {
     getNode: lookup.getNode,
     getEntryNode: () => entryNode,
-    getTransformation: (nodeId) => getTransformation(lookup.getNode(nodeId)),
     getLinks: (nodeId) => {
       if (!map.hasOwnProperty(nodeId)) return []
       return Object.keys(map[nodeId])
@@ -63,8 +61,4 @@ module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
 
 function _getThread (node) {
   return node.thread
-}
-
-function _getTransformation (node) {
-  return node
 }

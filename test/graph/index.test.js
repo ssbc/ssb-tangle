@@ -2,16 +2,16 @@ const test = require('tape')
 const Graph = require('../../graph')
 
 test('Graph', t => {
-  //     A   (first)
+  //     A   (root)
   //    / \
   //   B   C
   //    \ /
   //     D
 
-  const A = { key: 'A', thread: { first: null, previous: null } }
-  const B = { key: 'B', thread: { first: 'A', previous: ['A'] } }
-  const C = { key: 'C', thread: { first: 'A', previous: ['A'] } }
-  const D = { key: 'D', thread: { first: 'A', previous: ['B', 'C'] } }
+  const A = { key: 'A', thread: { root: null, previous: null } }
+  const B = { key: 'B', thread: { root: 'A', previous: ['A'] } }
+  const C = { key: 'C', thread: { root: 'A', previous: ['A'] } }
+  const D = { key: 'D', thread: { root: 'A', previous: ['B', 'C'] } }
 
   const graph = Graph(A, [B, C, D])
 

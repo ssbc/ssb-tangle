@@ -3,7 +3,7 @@
 
 // e.g.
 //
-//    A   (first)
+//    A   (root)
 //    |
 //    B           J? (K points backto this but we don't have it)
 //    |           |

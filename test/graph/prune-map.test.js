@@ -1,7 +1,7 @@
 const test = require('tape')
-const prune = require('../../../graph/tools/prune-map')
+const prune = require('../../graph/prune-map')
 
-//      A  (first)
+//      A  (root)
 //     / \
 //    B   C
 //   /   / \
@@ -24,7 +24,7 @@ const getMap = () => ({
 test('prune-map', t => {
   // say C is invalid, result:
   //
-  //      A  (first)
+  //      A  (root)
   //     /
   //    B
   //   /
@@ -40,7 +40,7 @@ test('prune-map', t => {
 
   // say D is invalid, result :
   //
-  //      A  (first)
+  //      A  (root)
   //     / \
   //    B   C
   //       / \
