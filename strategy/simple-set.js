@@ -1,5 +1,3 @@
-// const isEqual = require('lodash.isequal')
-
 // This made for modelling Sets made up of Strings
 //
 // I've chosen to make it *commutative* (transformation order doesn't matter)
@@ -10,7 +8,7 @@
 
 const IDENTITY = {}
 
-function Rule (opts = {}) {
+function Rule () {
   // transformations are of form:
   // - { String: Integer }
   // - {} (identity)

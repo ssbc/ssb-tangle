@@ -50,7 +50,7 @@ test('strategy/overwrite', t => {
       null,
       { content: 'dog' },
       5,
-      identity()
+      null // default reified identity
     ],
     'reify transformation (general + identity)'
   )

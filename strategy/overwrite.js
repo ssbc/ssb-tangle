@@ -3,14 +3,14 @@ const assert = require('assert').strict
 
 function OverwriteRule (opts = {}) {
   const {
-    identity = null,
+    identity = {},
     reifiedIdentiy = null
   } = opts
 
   function isTransformation (T) {
     // T is either identity, or { set: value }
 
-    if (isEqual(T, identity)) return true
+    if (isIdentity(T)) return true
 
     if (T === undefined) return false
     if (typeof T !== 'object') return false
@@ -24,18 +24,21 @@ function OverwriteRule (opts = {}) {
         return false
     }
   }
+  function isIdentity (T) {
+    return isEqual(T, identity)
+  }
 
   function reify (T) {
-    if (isEqual(T, identity)) return reifiedIdentiy
+    if (isIdentity(T)) return reifiedIdentiy
 
     return T.set
   }
 
   function concat (a, b) {
-    if (!isTransformation(a)) throw new Error('cannot concat invalid transformation', a)
-    if (!isTransformation(b)) throw new Error('cannot concat invalid transformation', b)
+    if (!isTransformation(a)) throw ConcatError(a)
+    if (!isTransformation(b)) throw ConcatError(b)
 
-    if (isEqual(b, identity)) return a
+    if (isIdentity(b)) return a
     return b
   }
 
@@ -96,6 +99,10 @@ function OverwriteRule (opts = {}) {
     isValidMerge
     // merge
   }
+}
+
+function ConcatError (T) {
+  return new Error(`cannot concat invalid transformation ${JSON.stringify(T)}`)
 }
 
 module.exports = OverwriteRule
