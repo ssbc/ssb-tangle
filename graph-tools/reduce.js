@@ -10,9 +10,9 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
 
   // TODO prune time-travllers
 
-  const { concat, nakedTransformation } = strategy
+  const { concat, pureTransformation } = strategy
   const getT = (nodeId) => {
-    return nakedTransformation(
+    return pureTransformation(
       getTransformation(graph.getNode(nodeId))
     )
   }

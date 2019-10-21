@@ -9,8 +9,8 @@ module.exports = function StrategyCompose (composition) {
   // - perhaps leave that to each sub-method to define
 
   return {
-    nakedTransformation: NakedTransformation(composition),
-    //    - want this so anyone can give a node to this Rules thing and get transformation back
+    pureTransformation: PureTransformation(composition),
+    // - want this so anyone can give a node to this Strategy thing and get transformation back
     // isTransformation: IsTransformation(composition),
     // identity ?
     reify: Reify(composition),
@@ -20,7 +20,7 @@ module.exports = function StrategyCompose (composition) {
   }
 }
 
-function NakedTransformation (composition) {
+function PureTransformation (composition) {
   return function (S) {
     // take an Object S, which may have supurflous or missing fields
     // and create from it a clear explicit transformation, T

@@ -4,7 +4,7 @@ const Lookup = require('./lookup')
 const pruneMap = require('./prune-map')
 const isRoot = require('../lib/is-root')
 
-module.exports = function buildEdgeMap (entryNode, otherNodes, opts = {}) {
+module.exports = function Graph (entryNode, otherNodes, opts = {}) {
   const {
     getThread = _getThread
   } = opts
