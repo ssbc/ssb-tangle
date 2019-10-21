@@ -1,6 +1,6 @@
 {
   "name": "ssb-tangle",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "a tool for dealing with thread-type tangles in scuttlebutt",
   "main": "index.js",
   "scripts": {
