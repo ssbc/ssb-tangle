@@ -86,6 +86,19 @@ Functions attached to this strategy are:
 ### graph-tools/reduce
 
 ```js
+reduce(entryNode, otherNodes, strategy, opts)
+// => headState
+```
+
+where
+- `entryNode` *Object* is a the first node at the start of your tangle
+- `otherNodes` *Array* is a list of other nodes (in the same format as `entryNode`) which may be part of the tangle
+- `strategy` is a something derived from `strategy/compose`
+- `opts` *Object* (optional) allows you to provide further options for how to reduce:
+  - `getThread` *Function* for mapping the a given node to it's "thread info" about position in the tangle. Takes `node` and is expected to return `{ root: Key, previous: [Key] }`
+  - `getTransformation` *Function* for mapping a given node to the part containing the Transformation. Takes `node` and expected to return `T` (an Object)
+
+```js
 const reduce = require('ssb-tangle/graph-tools/reduce')
 
 // say we have 3 messages posted one after another like this:
