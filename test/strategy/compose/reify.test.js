@@ -19,7 +19,7 @@ test('strategy/compose/reify', t => {
     }),
     {
       title: 'lunch with friends',
-      attendees: [ 'ben', 'luandro' ]
+      attendees: ['ben', 'luandro']
     },
     'basic reify'
   )
