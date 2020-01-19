@@ -30,13 +30,10 @@
   },
   "dependencies": {
     "@tangle/graph": "^1.1.0",
-<<<<<<< HEAD
     "@tangle/overwrite": "^1.0.0",
     "@tangle/reduce": "^1.0.1",
     "@tangle/simple-set": "^1.0.0",
     "@tangle/strategy": "^1.0.0",
-=======
->>>>>>> e5d4474... get reduce isValid working
     "lodash.clone": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
