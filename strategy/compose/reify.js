@@ -14,7 +14,7 @@ module.exports = function Reify (composition) {
         const { reify, identity } = strategy
 
         result[field] = null
-        if (T.hasOwnProperty(field) && !isEqual(T[field], identity())) {
+        if (field in T && !isEqual(T[field], identity())) {
           result[field] = reify(T[field])
         }
       })

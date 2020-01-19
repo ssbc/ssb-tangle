@@ -36,7 +36,7 @@ module.exports = function Lookup (map, entryNode, otherNodes) {
       delete disconnected[key]
     }
 
-    if (!map.hasOwnProperty(key)) continue
+    if (!(key in map)) continue
 
     Object.keys(map[key]).forEach(linkedKey => queue.unshift(linkedKey))
   }
@@ -45,7 +45,7 @@ module.exports = function Lookup (map, entryNode, otherNodes) {
   // storing the value as null
   Object.values(disconnected).forEach(node => {
     node.thread.previous.forEach(linkedKey => {
-      if (!disconnected.hasOwnProperty[linkedKey]) disconnected[linkedKey] = null
+      if (!(linkedKey in disconnected)) disconnected[linkedKey] = null
     })
   })
 
@@ -53,8 +53,8 @@ module.exports = function Lookup (map, entryNode, otherNodes) {
     connected,
     disconnected,
     getNode: (key) => {
-      if (connected.hasOwnProperty(key)) return connected[key]
-      else if (disconnected.hasOwnProperty(key)) {
+      if (key in connected) return connected[key]
+      else if (key in disconnected) {
         console.warn(`key ${key} found, but is disconnected from main graph`)
       } else {
         console.warn(`key ${key} not in lookup`)

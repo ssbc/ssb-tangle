@@ -12,7 +12,7 @@ module.exports = function pruneMap (map, entryId, invalidIds) {
 
   while (queue.length) {
     nodeId = queue.pop()
-    if (!map.hasOwnProperty(nodeId)) continue
+    if (!(nodeId in map)) continue
 
     if (allInvalidIds.has(nodeId)) {
       forEachKey(map[nodeId], nodeId => {

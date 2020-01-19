@@ -24,25 +24,25 @@ module.exports = function Graph (entryNode, otherNodes, opts = {}) {
     getNode: lookup.getNode,
     getEntryNode: () => entryNode,
     getLinks: (nodeId) => {
-      if (!map.hasOwnProperty(nodeId)) return []
+      if (!(nodeId in map)) return []
       return Object.keys(map[nodeId])
     },
     getReverseLinks: (nodeId) => {
-      if (!reverseMap.hasOwnProperty(nodeId)) return []
+      if (!(nodeId in reverseMap)) return []
       return Object.keys(reverseMap[nodeId])
     },
 
     isBranchNode: (nodeId) => {
-      if (!map.hasOwnProperty(nodeId)) return false
+      if (!(nodeId in map)) return false
       return Object.keys(map[nodeId]).length > 1
     },
     isMergeNode: (nodeId) => {
-      if (!reverseMap.hasOwnProperty(nodeId)) return false
+      if (!(nodeId in reverseMap)) return false
       return Object.keys(reverseMap[nodeId]).length > 1
     },
     isHeadNode: (nodeId) => {
       if (!lookup.getNode(nodeId)) return false
-      if (!map.hasOwnProperty(nodeId)) return true
+      if (!(nodeId in map)) return true
       return Object.keys(map[nodeId]).length === 0
     },
 
