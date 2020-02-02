@@ -27,11 +27,9 @@ test('reduce (custom isValid)', t => {
   }
 
   function isValid (state, nextNode) {
-    const { graph } = state
+    const { accT, entryNode, graph } = state
 
-    return graph.rootKeys
-      .map(k => graph.getNode(k))
-      .some(rootNode => rootNode.author === nextNode.author)
+    return nextNode.author === entryNode.author
   }
 
   const expected = {
