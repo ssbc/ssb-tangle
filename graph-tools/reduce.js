@@ -5,7 +5,7 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
   const {
     getThread,
     getTransformation = i => i,
-    isValid = i => true
+    isValid
   } = opts
   const graph = Graph(entryNode, otherNodes, { getThread })
 
@@ -17,7 +17,7 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
       getTransformation(graph.getNode(nodeId))
     )
   }
-  
+
   var queue = new Queue()
   // a queue made up of elements { nodeId, accT }
   //   nodeId = the unique identifier for a node
@@ -44,10 +44,14 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
     // accT is the accumulated Transformation so far
     // (NOT including Transformation stored in key though, that's what we're )
 
-    graph.getLinks(nodeId).forEach(nextId => {
-      const nextNodeValid = isValid({ accT, entryNode, graph }, graph.getNode(nextId))
-      if (!nextNodeValid) graph.prune([nextId])
-    })
+    if (isValid) {
+      // check if the next steps are valid before taking them
+      // prune here, because this migh change which nodes are new heads / tips
+      graph.getLinks(nodeId).forEach(nextId => {
+        const nextNodeValid = isValid({ accT, entryNode, graph }, graph.getNode(nextId))
+        if (!nextNodeValid) graph.prune([nextId])
+      })
+    }
 
     if (graph.isHeadNode(nodeId)) {
       heads.terminal[nodeId] = accT
