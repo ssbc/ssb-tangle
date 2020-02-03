@@ -19,22 +19,18 @@ test('strategy/compose/reify', t => {
     }),
     {
       title: 'lunch with friends',
-      attendees: [ 'ben', 'luandro' ]
+      attendees: ['ben', 'luandro']
     },
     'basic reify'
   )
 
   t.deepEqual(
-    reify(
-      {
-        title: { set: 'lunch with friends' }
-      }
-    ),
+    reify({}),
     {
-      title: 'lunch with friends',
-      attendees: null
+      title: null,
+      attendees: []
     },
-    'fields not mentioned are reified as ... null'
+    'fields not mentioned are reified to their reified(identity)'
   )
 
   t.end()
