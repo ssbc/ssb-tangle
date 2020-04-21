@@ -43,9 +43,9 @@ The formalisation is through defining **strategies** which specify things like h
 ### strategy/compose
 
 ```
-const Compose = require('ssb-tangle/stragey/compose')
-const Overwrite = require('ssb-tangle/stragey/overwrite')
-const Set = require('ssb-tangle/stragey/simple-set')
+const Compose = require('ssb-tangle/strategy/compose')
+const Overwrite = require('ssb-tangle/strategy/overwrite')
+const Set = require('ssb-tangle/strategy/simple-set')
 
 const compostion = {
   preferredName: Overwrite(),

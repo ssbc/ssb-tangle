@@ -13,9 +13,10 @@ module.exports = function Reify (composition) {
       .forEach(([field, strategy]) => {
         const { reify, identity } = strategy
 
-        result[field] = null
         if (field in T && !isEqual(T[field], identity())) {
           result[field] = reify(T[field])
+        } else {
+          result[field] = reify(identity())
         }
       })
 
