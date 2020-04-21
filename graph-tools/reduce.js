@@ -4,7 +4,8 @@ const Queue = require('../lib/queue')
 module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
   const {
     getThread,
-    getTransformation = i => i
+    getTransformation = i => i,
+    isValid
   } = opts
   const graph = Graph(entryNode, otherNodes, { getThread })
 
@@ -22,6 +23,10 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
   //   nodeId = the unique identifier for a node
   //   accT = the accumulated (concat'd) Transformation up to and including the Transformation
   //          described in node 'nodeId'
+
+  if (!isValid({ accT: null, entryNode, graph }, entryNode)) {
+    throw new Error('tangle starting node invalid!')
+  }
   queue.add({
     nodeId: entryNode.key,
     accT: getT(entryNode.key)
@@ -38,6 +43,15 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
     var { nodeId, accT } = queue.next()
     // accT is the accumulated Transformation so far
     // (NOT including Transformation stored in key though, that's what we're )
+
+    if (isValid) {
+      // check if the next steps are valid before taking them
+      // prune here, because this migh change which nodes are new heads / tips
+      graph.getLinks(nodeId).forEach(nextId => {
+        const nextNodeValid = isValid({ accT, entryNode, graph }, graph.getNode(nextId))
+        if (!nextNodeValid) graph.prune([nextId])
+      })
+    }
 
     if (graph.isHeadNode(nodeId)) {
       heads.terminal[nodeId] = accT

@@ -27,7 +27,7 @@ function PureTransformation (composition) {
     var T = {}
 
     Object.entries(composition).forEach(([field, strategy]) => {
-      T[field] = S.hasOwnProperty(field)
+      T[field] = field in S
         ? S[field]
         : strategy.identity()
     })

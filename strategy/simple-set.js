@@ -39,7 +39,7 @@ function Rule () {
 
     var newT = Object.assign({}, a)
     Object.entries(b).forEach(([entry, weight]) => {
-      if (!newT.hasOwnProperty(entry)) newT[entry] = weight
+      if (!(entry in newT)) newT[entry] = weight
       else {
         const newWeight = newT[entry] + weight
 

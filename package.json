@@ -4,7 +4,9 @@
   "description": "a tool for dealing with thread-type tangles in scuttlebutt",
   "main": "index.js",
   "scripts": {
-    "test": "tape '**/*.test.js' | tap-spec"
+    "test": "npm run test:js && npm run lint",
+    "test:js": "tape '**/*.test.js' | tap-spec",
+    "lint": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/ssbc/ssb-tangle#readme",
   "devDependencies": {
+    "standard": "^14.3.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0"
   },
