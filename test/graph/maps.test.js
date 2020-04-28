@@ -28,6 +28,20 @@ test('Map: linear', t => {
   t.end()
 })
 
+test('Map: root only', t => {
+  //    A   (root)
+
+  const A = { key: 'A', thread: { root: null, previous: null } }
+
+  const expectedMap = {
+    A: {}
+  }
+
+  t.deepEqual(Map([A], getThread), expectedMap, 'root only')
+
+  t.end()
+})
+
 test('Map: merge', t => {
   //     A   (root)
   //    / \
