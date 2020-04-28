@@ -31,6 +31,44 @@ test('getHeads: Root-only graph', t => {
   t.end()
 })
 
+test('getHeads: Root and dangle', t => {
+  //    A   (root)
+  //     
+  //          ----?--- J? (a message we don't have)
+  //                   |
+  //                   K
+
+  const inputMap = {
+    A: {},
+    J: { K: 1 }
+  }
+
+  const expectedHeads = ['K']
+
+  t.deepEqual(getHeads(inputMap), expectedHeads, 'root and dangle')
+
+  t.end()
+})
+
+test('getHeads: Graph with dangle', t => {
+  //    A   (root)
+  //    |
+  //    B     ----?--- J? (a message we don't have)
+  //                   |
+  //                   K
+
+  const inputMap = {
+    A: { B: 1 },
+    J: { K: 1 }
+  }
+
+  const expectedHeads = ['B', 'K']
+
+  t.deepEqual(getHeads(inputMap), expectedHeads, 'graph dangle')
+
+  t.end()
+})
+
 test('getHeads: Graph with simple merge', t => {
   //     A   (root)
   //    / \
