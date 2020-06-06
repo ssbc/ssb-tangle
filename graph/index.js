@@ -6,7 +6,7 @@ const isRoot = require('../lib/is-root')
 
 module.exports = function Graph (entryNode, otherNodes, opts = {}) {
   const {
-    getThread = _getThread
+    getThread = (node) => node.thread
   } = opts
 
   assert(isRoot(entryNode, getThread))
@@ -18,7 +18,7 @@ module.exports = function Graph (entryNode, otherNodes, opts = {}) {
   var reverseMap = ReverseMap(map)
   // and the inverse
 
-  var lookup = Lookup(map, entryNode, otherNodes)
+  var lookup = Lookup(map, entryNode, otherNodes, { getThread })
 
   return {
     getNode: lookup.getNode,
@@ -57,8 +57,4 @@ module.exports = function Graph (entryNode, otherNodes, opts = {}) {
       return { map, reverseMap }
     }
   }
-}
-
-function _getThread (node) {
-  return node.thread
 }

@@ -14,7 +14,10 @@
 //   disconnected: { J: null, K }
 // }
 
-module.exports = function Lookup (map, entryNode, otherNodes) {
+module.exports = function Lookup (map, entryNode, otherNodes, opts = {}) {
+  const {
+    getThread = (node) => node.thread
+  } = opts
   var connected = {}
   var disconnected = {}
 
@@ -36,7 +39,7 @@ module.exports = function Lookup (map, entryNode, otherNodes) {
       delete disconnected[key]
     }
 
-    if (!map.hasOwnProperty(key)) continue
+    if (!map[key]) continue
 
     Object.keys(map[key]).forEach(linkedKey => queue.unshift(linkedKey))
   }
@@ -44,7 +47,7 @@ module.exports = function Lookup (map, entryNode, otherNodes) {
   // insert referenced but unknown nodes into disconnected
   // storing the value as null
   Object.values(disconnected).forEach(node => {
-    node.thread.previous.forEach(linkedKey => {
+    getThread(node).previous.forEach(linkedKey => {
       if (!disconnected.hasOwnProperty[linkedKey]) disconnected[linkedKey] = null
     })
   })
