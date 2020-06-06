@@ -165,6 +165,26 @@ This is why the return value is an Object which maps keys (representing the diff
 
 You can take any of the cumulative transforms so far and use `strategy.reify` on it to see what the transform mapped into a user-facing state would be.
 
+### graph-tools/get-heads
+
+Useful for calculating the keys of the current leading heads of your tangle.
+Mainly used to calculate `previous` when publishing new tangle messages.
+
+Note this is just a thin wrapper over `reduce`, and if you already have the output of that (because you've calculated the transformation state) you should probably use that instead.
+
+```js
+reduce(entryNode, otherNodes, opts)
+// => headState
+```
+
+where
+- `entryNode` *Object* is a the first node at the start of your tangle
+- `otherNodes` *Array* is a list of other nodes (in the same format as `entryNode`) which may be part of the tangle
+- `opts` *Object* (optional) allows you to provide further options for how to reduce:
+  - `getThread` *Function* for mapping the a given node to it's "thread info" about position in the tangle. Takes `node` and is expected to return `{ root: Key, previous: [Key] }`
+  - `getTransformation` *Function* for mapping a given node to the part containing the Transformation. Takes `node` and expected to return `T` (an Object)
+  - `strategy` is a something derived from `strategy/compose` (this may be needed later to decide whether to include nodes in head calculation)
+
 ## Development
 
 > WIP - not all aspects of this are production ready yet

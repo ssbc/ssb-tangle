@@ -1,7 +1,7 @@
-// const IsTransformation = require('./is-transformation')
 const Reify = require('./reify')
 const Concat = require('./concat')
 // const IsConflict = require('./is-conflict')
+// const IsTransformation = require('./is-transformation')
 
 module.exports = function StrategyCompose (composition) {
   // TODO validate each strategy
@@ -10,28 +10,26 @@ module.exports = function StrategyCompose (composition) {
 
   return {
     pureTransformation: PureTransformation(composition),
-    // - want this so anyone can give a node to this Strategy thing and get transformation back
-    // isTransformation: IsTransformation(composition),
-    // identity ?
     reify: Reify(composition),
     concat: Concat(composition)
     // isConflict: IsConflict(composition),
     // isValidMerge: IsValidMerge(composition)
+    // isTransformation: IsTransformation(composition), ?
+    // identity ?
   }
 }
 
 function PureTransformation (composition) {
-  return function (S) {
-    // take an Object S, which may have supurflous or missing fields
-    // and create from it a clear explicit transformation, T
-    var T = {}
+  return function (T) {
+    // take an Object T, which may have supurflous or missing transformation fields
+    // and creates from it a clean + explicit transformation, fullT
+
+    var fullT = {}
 
     Object.entries(composition).forEach(([field, strategy]) => {
-      T[field] = S.hasOwnProperty(field)
-        ? S[field]
-        : strategy.identity()
+      fullT[field] = T[field] || strategy.identity()
     })
 
-    return T
+    return fullT
   }
 }
