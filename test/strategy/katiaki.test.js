@@ -1,7 +1,7 @@
 const test = require('tape')
 const KaitiakiRule = require('../../strategy/kaitiaki')
 
-test.only('strategy/kaitiaki', t => {
+test('strategy/kaitiaki', t => {
   const {
     isTransformation,
     reify,
