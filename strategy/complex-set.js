@@ -4,7 +4,7 @@ const { isFeed } = require('ssb-ref')
 
 const IDENTITY = {}
 
-function KaitiakiRule () {
+function ComplexSetRule () {
   /*
     transformations are of form:  
     {
@@ -61,4 +61,4 @@ function isValidValue (value) {
   return Number.isInteger(value)
 }
 
-module.exports = KaitiakiRule
+module.exports = ComplexSetRule

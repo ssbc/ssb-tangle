@@ -1,13 +1,13 @@
 const test = require('tape')
-const KaitiakiRule = require('../../strategy/kaitiaki')
+const ComplexSetRule = require('../../strategy/complex-set')
 
-test('strategy/kaitiaki', t => {
+test('strategy/complex-set', t => {
   const {
     isTransformation,
     reify,
     concat,
     identity
-  } = KaitiakiRule()
+  } = ComplexSetRule()
 
   // isTransformation /////////////////////////////
 
