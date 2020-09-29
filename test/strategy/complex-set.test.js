@@ -1,7 +1,7 @@
 const test = require('tape')
 const ComplexSetRule = require('../../strategy/complex-set')
 
-test('strategy/complex-set', t => {
+test.only('strategy/complex-set', t => {
   const {
     isTransformation,
     reify,
@@ -34,9 +34,18 @@ test('strategy/complex-set', t => {
       [benFeedId]: { 200: 1 }
     },
     
-    { // mutiple feeds same seq
+    {
       [mixFeedId]: { 100: 0 },
       [benFeedId]: { 200: 2 }
+    },
+    {
+      [mixFeedId]: { 100: 1, 200: 1 } // idempotent
+    },
+    {
+      [mixFeedId]: { 100: 1, 200: -1, 300: 1 }
+    },
+    {
+      [mixFeedId]: { 100: 1, 200: -1, 150: -1 }
     },
     identity() // {}
   ]
@@ -78,6 +87,37 @@ test('strategy/complex-set', t => {
 
   notTs.forEach(T => {
     t.false(isTransformation(T), `!isTransformation : ${JSON.stringify(T)}`)
+  })
+
+  const expectedReify = [
+    { [chereseFeedId]: [{ start: 100, end: null }] }, // { [chereseFeedId]: { 100: 1 } },
+    {}, // { [chereseFeedId]: { 100: 0 } },
+    {}, // { [chereseFeedId]: { 500: -1 } },
+    {
+      [mixFeedId]: [{ start: 100, end: null }],
+      [benFeedId]: [{ start: 200, end: null }]
+    }, // { [mixFeedId]: { 100: 1 }, [benFeedId]: { 200: 2 } }
+    {
+      [mixFeedId]: [{ start: 100, end: null }],
+      [benFeedId]: [{ start: 200, end: null }]
+    }, // { [mixFeedId]: { 100: 2 }, [benFeedId]: { 200: 1 } } order-invariance
+    {
+      [benFeedId]: [{ start: 200, end: null }]
+    }, // { [mixFeedId]: { 100: 0 }, [benFeedId]: { 200: 2 } },
+    {
+      [mixFeedId]: [{ start: 100, end: null }]
+    }, // [mixFeedId]: { 100: 1, 200: 1 }
+    {
+      [mixFeedId]: [{ start: 100, end: 200 }, { start: 300, end: null }]
+    }, // [mixFeedId]: { 100: 1, 200: -1, 300: 1 }
+    {
+      [mixFeedId]: [{ start: 100, end: 150 }]
+    }, // [mixFeedId]: { 100: 1, 200: -1, 150: -1 }
+    {} // identity() // {}
+  ]
+
+  Ts.forEach((T, i) => {
+    t.deepEqual(reify(T), expectedReify[i], `reify :  ${JSON.stringify(T)}`)
   })
 
   t.end()

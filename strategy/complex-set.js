@@ -25,6 +25,37 @@ function ComplexSetRule () {
   }
 
   function reify (T) {
+    var res = {}
+  
+    Object.entries(T).forEach(([key, value]) => {
+      const events = Object.entries(value)
+        .map(([seq, state]) => [Number(seq), state])
+        .sort((a, b) => a[0] - b[0])
+
+      var isAdd = true
+      var interval = new Interval()
+
+      var history = []
+
+      while (events.length) {
+        var [seq, state] = events.shift()
+        if (isAdd && state > 0) {
+          interval.start = seq
+          isAdd = false
+        } else if (!isAdd && state <= 0) {
+          interval.end = seq
+          isAdd = true
+          history.push(interval)
+          interval = new Interval()
+        }
+      }
+
+      if (interval.start) history.push(interval)
+      if (history.length) res[key] = history
+    })
+
+    
+    return res
   }
 
   function concat (a, b) {
@@ -50,6 +81,10 @@ function isValidEntry (obj) {
   return Object.entries(obj).every(([key, value]) => {
     return isValidKey(key) && isValidValue(value)
   })
+}
+
+function Interval () {
+  return { start: null, end: null }
 }
 
 function isValidKey (key) {
