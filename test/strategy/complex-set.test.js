@@ -9,65 +9,34 @@ test('strategy/complex-set', t => {
     identity
   } = ComplexSetRule()
 
+  const chereseFeedId = '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519'
+  const mixFeedId = '@mixVv6k5mnWKkJTgCIpqOsA4JeJd9Oz2gmv6rojQeXU=.ed25519'
+  const benFeedId = '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519'
+
   // isTransformation /////////////////////////////
 
   const Ts = [
     { // simple add
-      '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 1
-      }
+      [chereseFeedId]: { 100: 1 }
+    },
+    {
+      [chereseFeedId]: { 100: 0 }
     },
     { // simple remove
-      '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        500: -1
-      }
+      [chereseFeedId]: { 500: -1 }
     },
-    { // multiple adds in a row
-      '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 1, // cherese added at seq 100 by mix
-        300: 1  // added again at seq 300 later on by ben
-      }
+    {
+      [mixFeedId]: { 100: 1 },
+      [benFeedId]: { 200: 2 }
     },
-    { // muliple feeds different seq
-      '@mixVv6k5mnWKkJTgCIpqOsA4JeJd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 1 // mix added at seq 100
-      },
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        150: 1 // ben added after mix at seq 150
-      }
+    { // order-invariance
+      [mixFeedId]: { 100: 2 },
+      [benFeedId]: { 200: 1 }
     },
+    
     { // mutiple feeds same seq
-      '@mixVv6k5mnWKkJTgCIpqOsA4JeJd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 1
-      },
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 1
-      }
-    },
-    { // multiple removes in a row
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        200: 1, // ben added at seq 200
-        550: -1, // remove at seq 550 (by cherese)
-        500: -1 // removed at seq 500 (by mix who was out of the loop)
-      }
-    },
-    {
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 1,
-        200: 2
-      }
-    },
-    {
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        100: 2,
-        200: 1
-      }
-    },
-    {
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        500: 1,
-        100: 2
-      }
+      [mixFeedId]: { 100: 0 },
+      [benFeedId]: { 200: 2 }
     },
     identity() // {}
   ]
@@ -77,38 +46,36 @@ test('strategy/complex-set', t => {
   })
 
   const notTs = [
-    [],
-    null,
-    undefined,
-    '',
     'dog',
-    100,
+    undefined,
+    null,
+    true,
     {
-      '@mixVv6k5mnWKkJTgCIpqOsA4JeJd9Oz2gmv6rojQeXU=.ed25519': {
-        'seq': 1 // invalid LHS expected to be int
-      }
+      [chereseFeedId]: { 200: 2.5 }
     },
     {
-      '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        200: '2' // invalid RHS expected to be in
-      }
+      [chereseFeedId]: { 200: 'duck' }
     },
     {
-      '@bengCIpqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {} // should this be allowed...?
+      [chereseFeedId]: { 200: null }
     },
     {
-      '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': {
-        'invalid': 'invalid' // both sides invalid
-      }
+      [chereseFeedId]: { 200: true }
     },
     {
-      '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': null
+      [chereseFeedId]: { 200: 2, 300: undefined }
     },
-    { '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': undefined },
-    { '@chereseqOsA4JeJVv6k5mnWKkJTd9Oz2gmv6rojQeXU=.ed25519': 123 },
-    { 123: { 200: 1 }}, // invalid feedId (number)
-    { '@cherese': { 200: 1 }} // invalid feedId (not a feedId)
+    {
+      [chereseFeedId]: { 200: undefined }
+    },
+    {
+      [chereseFeedId]: { 'dog': 1 } // invalid seq value
+    },
+    {
+      'dog': { 200: 1 } // invalid feedId string
+    }
   ]
+
   notTs.forEach(T => {
     t.false(isTransformation(T), `!isTransformation : ${JSON.stringify(T)}`)
   })
