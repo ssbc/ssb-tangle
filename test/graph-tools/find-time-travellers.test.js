@@ -1,6 +1,8 @@
 const test = require('tape')
-const Graph = require('../../graph')
+const Graph = require('@tangle/graph')
 const Find = require('../../graph-tools/find-time-travellers.js')
+
+const getBacklinks = node => node.thread.previous 
 
 test('find-time-traveller', t => {
   //      A  (root)
@@ -17,7 +19,7 @@ test('find-time-traveller', t => {
   const D = { key: 'D', author: 'WARIO', seq: 20, thread: { root: 'A', previous: ['C'] } }
   const E = { key: 'E', author: 'WARIO', seq: 21, thread: { root: 'A', previous: ['B'] } }
 
-  const graph = Graph(A, [B, C, D, E])
+  const graph = new Graph([A, B, C, D, E], { getBacklinks })
 
   t.deepEqual(Find(graph), ['E'], 'simple case')
 
@@ -39,7 +41,7 @@ test('find-time-traveller', t => {
 
   const initial = messages.shift()
 
-  const graph2 = Graph(initial, messages)
+  const graph2 = new Graph([initial, ...messages], { getBacklinks })
 
   t.deepEqual(Find(graph2), ['E'], 'more complex case')
   t.end()

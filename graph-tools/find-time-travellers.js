@@ -12,7 +12,7 @@ module.exports = function findTimeTravellers (graph, opts = {}) {
   const getLongestPath = GetLongestPath(graph)
 
   var authorLedger = AuthorLedger()
-  var queue = [graph.getEntryNode().key]
+  var queue = graph.rootNodeKeys
   var nodeId, node, author
 
   while (queue.length) {
@@ -43,13 +43,14 @@ function AuthorLedger () {
 }
 
 function GetLongestPath (graph) {
-  const { map } = graph.getRaw()
-  const entryId = graph.getEntryNode().key
+  const { linkMap } = graph.raw
+  if (graph.rootNodeKeys.length > 1) throw new Error('code not yet designed for multiple entry nodes')
+  const entryId = graph.rootNodeKeys[0]
 
-  const dmap = buildLongestPathMap(map, entryId)
+  const dmap = buildLongestPathMap(linkMap, entryId)
 
   return function longestPath (exitId) {
-    return longestPathLength(map, entryId, exitId, { dmap })
+    return longestPathLength(linkMap, entryId, exitId, { dmap })
   }
 }
 
