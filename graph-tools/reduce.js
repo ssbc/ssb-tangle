@@ -1,4 +1,4 @@
-const Graph = require('../graph')
+const Graph = require('@tangle/graph')
 const Queue = require('../lib/queue')
 
 module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
@@ -6,7 +6,11 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
     getThread,
     getTransformation = i => i
   } = opts
-  const graph = Graph(entryNode, otherNodes, { getThread })
+
+  const getBacklinks = getThread
+    ? node => getThread(node).previous 
+    : node => node.thread.previous 
+  const graph = new Graph([entryNode, ...otherNodes], { getBacklinks })
 
   // TODO prune time-travllers
 
@@ -54,7 +58,7 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
       } else {
         heads.preMerge.set(nodeId, accT)
 
-        const requiredKeys = graph.getReverseLinks(nextId)
+        const requiredKeys = graph.getBacklinks(nextId)
         const ready = requiredKeys.every(nodeId => heads.preMerge.has(nodeId))
         // check heads.preMerge store to see if we now have the state needed to complete merge
 
