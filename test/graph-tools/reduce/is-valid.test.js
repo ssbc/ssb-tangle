@@ -27,9 +27,11 @@ test('reduce (custom isValid)', t => {
   }
 
   function isValid (state, nextNode) {
-    const { accT, entryNode, graph } = state
+    const { graph } = state
 
-    return nextNode.author === entryNode.author
+    return graph.rootKeys
+      .map(k => graph.getNode(k))
+      .some(rootNode => rootNode.author === nextNode.author)
   }
 
   const expected = {
@@ -45,7 +47,6 @@ test('reduce (custom isValid)', t => {
   )
   t.end()
 })
-
 
 // questions:
 // - should it just perform an additional check before / after basic tangle validity checks have been made?

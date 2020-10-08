@@ -8,7 +8,7 @@ const strategy = Strategy({
   title: Overwrite()
 })
 
-test('reduce (custom getThread)', t => {
+test('reduce (custom getBacklinks)', t => {
   //   A   (root)
   //   |
   //   B
@@ -28,14 +28,12 @@ test('reduce (custom getThread)', t => {
     title: { set: 'nice nice' }
   }
 
-  const getThread = node => {
-    const [root, previous] = node.tangles.conversation
-
-    return { root, previous }
+  const getBacklinks = node => {
+    return node.tangles.conversation[1]
   }
 
   t.deepEqual(
-    reduce(A, [B], strategy, { getThread }),
+    reduce(A, [B], strategy, { getBacklinks }),
     {
       B: {
         title: { set: 'nice nice' }
