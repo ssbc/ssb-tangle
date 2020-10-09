@@ -1,4 +1,4 @@
-const reduce = require('./reduce')
+const reduce = require('@tangle/reduce')
 
 module.exports = function getHeads (entryNode, otherNodes, opts = {}) {
   const strategy = opts.strategy || {
@@ -6,7 +6,7 @@ module.exports = function getHeads (entryNode, otherNodes, opts = {}) {
     concat: noop
   }
 
-  const headStates = reduce(entryNode, otherNodes, strategy, opts)
+  const headStates = reduce([entryNode, ...otherNodes], strategy, opts)
   // using reduce might be overkill at the moment, but depends on whether
   // people need to graph as it's built before determining "heads'
 

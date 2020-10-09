@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run test:js && npm run lint",
-    "test:js": "tape '**/*.test.js' | tap-spec",
+    "test:js": "tape 'test/**/*.test.js' | tap-spec",
     "lint": "standard --fix"
   },
   "repository": {

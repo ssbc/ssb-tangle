@@ -1,6 +1,8 @@
 const test = require('tape')
 const getHeads = require('../../graph-tools/get-heads')
 
+const getBacklinks = n => n.tangle.previous
+
 test('getHeads', t => {
   const tests = [
     () => {
@@ -18,7 +20,7 @@ test('getHeads', t => {
         tangle: { root: 'A', previous: ['A'] }
       }
 
-      const actual = getHeads(A, [B], { getThread: m => m.tangle })
+      const actual = getHeads(A, [B], { getBacklinks })
       const expected = ['B']
 
       t.deepEqual(actual, expected, DESCRIPTION)
@@ -33,7 +35,7 @@ test('getHeads', t => {
         tangle: { root: null, previous: null }
       }
 
-      const actual = getHeads(A, [], { getThread: m => m.tangle })
+      const actual = getHeads(A, [], { getBacklinks })
       const expected = ['A']
 
       t.deepEqual(actual, expected, DESCRIPTION)
@@ -60,7 +62,7 @@ test('getHeads', t => {
       }
 
       const expected = ['A']
-      const actual = getHeads(A, [J, K], { getThread: m => m.tangle })
+      const actual = getHeads(A, [J, K], { getBacklinks })
 
       t.deepEqual(actual, expected, DESCRIPTION)
     },
@@ -90,7 +92,7 @@ test('getHeads', t => {
       }
 
       const expected = ['B']
-      const actual = getHeads(A, [B, J, K], { getThread: m => m.tangle })
+      const actual = getHeads(A, [B, J, K], { getBacklinks })
 
       t.deepEqual(actual, expected, DESCRIPTION)
     },
@@ -121,7 +123,7 @@ test('getHeads', t => {
       }
 
       const expected = ['D']
-      const actual = getHeads(A, [B, C, D], { getThread: m => m.tangle })
+      const actual = getHeads(A, [B, C, D], { getBacklinks })
 
       t.deepEqual(actual, expected, DESCRIPTION)
     },
@@ -152,7 +154,7 @@ test('getHeads', t => {
       }
 
       const expected = ['C', 'D']
-      const actual = getHeads(A, [B, C, D], { getThread: m => m.tangle })
+      const actual = getHeads(A, [B, C, D], { getBacklinks })
 
       t.deepEqual(actual, expected, DESCRIPTION)
     }
