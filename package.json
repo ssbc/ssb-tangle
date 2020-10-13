@@ -33,11 +33,6 @@
     "@tangle/overwrite": "^1.0.0",
     "@tangle/reduce": "^1.0.1",
     "@tangle/simple-set": "^1.0.0",
-    "@tangle/strategy": "^1.0.0",
-    "lodash.clone": "^4.5.0",
-    "lodash.get": "^4.4.2",
-    "lodash.isequal": "^4.5.0",
-    "lodash.merge": "^4.6.2",
-    "lodash.set": "^4.3.2"
+    "@tangle/strategy": "^1.0.0"
   }
 }

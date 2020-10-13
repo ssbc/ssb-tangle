@@ -1,3 +1,5 @@
+:warning: **This module is being deprecated. Please use modules from gitlab.com/tangle-js**
+
 # ssb-tangle
 
 This is a collection of tools for processing thread-like tangles in scuttlebutt.
