@@ -2,7 +2,7 @@ const test = require('tape')
 const Graph = require('@tangle/graph')
 const Find = require('../../graph-tools/find-time-travellers.js')
 
-const getBacklinks = node => node.thread.previous 
+const getBacklinks = node => node.thread.previous
 
 test('find-time-traveller', t => {
   //      A  (root)

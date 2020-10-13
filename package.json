@@ -4,7 +4,9 @@
   "description": "a tool for dealing with thread-type tangles in scuttlebutt",
   "main": "index.js",
   "scripts": {
-    "test": "tape '**/*.test.js' | tap-spec"
+    "test": "npm run test:js && npm run lint",
+    "test:js": "tape '**/*.test.js' | tap-spec",
+    "lint": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -22,11 +24,16 @@
   },
   "homepage": "https://github.com/ssbc/ssb-tangle#readme",
   "devDependencies": {
+    "standard": "^14.3.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0"
   },
   "dependencies": {
-    "@tangle/graph": "^1.0.1",
+    "@tangle/graph": "^1.1.0",
+    "@tangle/overwrite": "^1.0.0",
+    "@tangle/reduce": "^1.0.1",
+    "@tangle/simple-set": "^1.0.0",
+    "@tangle/strategy": "^1.0.0",
     "lodash.clone": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",

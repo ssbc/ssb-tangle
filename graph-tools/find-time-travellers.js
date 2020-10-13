@@ -35,7 +35,7 @@ function AuthorLedger () {
 
   return {
     add: (author, record) => {
-      if (!ledger.hasOwnProperty(author)) ledger[author] = []
+      if (!(author in ledger)) ledger[author] = []
       ledger[author].push(record)
     },
     forEach: (entry, cb) => Object.entries(ledger).forEach(entry, cb)
