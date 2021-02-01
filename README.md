@@ -61,26 +61,26 @@ const T1 = {
   altnames: { ziva: 1, goomba: 0 }
 }
 
-strategy.reify(T1)
+strategy.mapToOutput(T1)
 // => { 
 //   preferredName: 'andromeda',
 //   altNames: ['ziva'],
 // }
 strategy.concat(T1, T2)
-strategy.pureTransformation(T2)
+strategy.mapToPure(T2)
 ```
 
 `Compose` takes an Object which maps field names to a strategy for that field, and returns a higher-order strategy.
 
 Functions attached to this strategy are:
-- `reify(T) => realState`
+- `mapToOutput(T) => realState`
   - takes a transformation and maps it into a useable real state
   - this is useful because some strategy like "simple-set" have transformations with a somewhat abstract state to access some nice conflict-avoidant properties
-  - _"reify" means "to make something abstract into something material/ concrete"_
+  - _"mapToOutput" means "to make something abstract into something material/ concrete"_
 - `concat(T1, T2) => T3`
   - combine two transformations (NOTE: order matters) and produce a third one
 
-- `pureTransformation(obj) => T`
+- `mapToPure(obj) => T`
   - takes an Object and produces a transformations from it
   - leaves off any friends which aren't mentioned in the strategy
   - any fields from the strategy not represented in `obj` get filled with the "identity element" that field (a noop transformation)
@@ -165,7 +165,7 @@ reduce(A, [B, C], strategy, {
 `reduce` gives you the output of walking the tangle so far. It's important to know there might be multiple outputs (because the thread can diverge if people post online concurrently).
 This is why the return value is an Object which maps keys (representing the different end-points/ tips of the graph histroy) to what the cumulative transform to that point.
 
-You can take any of the cumulative transforms so far and use `strategy.reify` on it to see what the transform mapped into a user-facing state would be.
+You can take any of the cumulative transforms so far and use `strategy.mapToOutput` on it to see what the transform mapped into a user-facing state would be.
 
 ### graph-tools/get-heads
 
