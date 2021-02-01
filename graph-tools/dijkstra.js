@@ -16,8 +16,8 @@ function longestPath (edgeMap, entryNode, exitNode, opts = {}) {
     return null
   }
 
-  var path = []
-  var currentNode = exitNode
+  const path = []
+  let currentNode = exitNode
   while (currentNode) {
     path.unshift(currentNode)
 
@@ -41,13 +41,13 @@ function longestPathLength (edgeMap, entryNode, exitNode, opts = {}) {
 }
 
 function buildLongestPathMap (edgeMap, entryNode) {
-  var pathsMap = {
+  const pathsMap = {
     [entryNode]: { previous: null, cost: 0 }
   }
   // node => { previous, cost }
 
-  var queue = [{ node: entryNode, cost: 0 }]
-  var currentRecord
+  const queue = [{ node: entryNode, cost: 0 }]
+  let currentRecord
 
   while (queue.length) {
     currentRecord = queue.pop()

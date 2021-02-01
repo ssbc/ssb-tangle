@@ -24,15 +24,15 @@
   },
   "homepage": "https://github.com/ssbc/ssb-tangle#readme",
   "devDependencies": {
-    "standard": "^14.3.1",
+    "standard": "^16.0.3",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0"
   },
   "dependencies": {
-    "@tangle/graph": "^1.1.0",
-    "@tangle/overwrite": "^1.0.0",
-    "@tangle/reduce": "^1.0.1",
-    "@tangle/simple-set": "^1.0.0",
-    "@tangle/strategy": "^1.0.0"
+    "@tangle/graph": "^2.1.0",
+    "@tangle/overwrite": "^2.0.0",
+    "@tangle/reduce": "^3.0.1",
+    "@tangle/simple-set": "^2.0.0",
+    "@tangle/strategy": "^2.0.1"
   }
 }
