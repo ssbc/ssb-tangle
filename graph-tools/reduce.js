@@ -10,5 +10,6 @@ module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
     opts.getBacklinks = node => node.thread.previous
   }
 
-  return Reduce([entryNode, ...otherNodes], strategy, opts)
+  opts.node = [entryNode, ...otherNodes]
+  return new Reduce(strategy, opts).state
 }

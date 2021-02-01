@@ -11,9 +11,9 @@ module.exports = function findTimeTravellers (graph, opts = {}) {
 
   const getLongestPath = GetLongestPath(graph)
 
-  var authorLedger = AuthorLedger()
-  var queue = graph.rootNodeKeys
-  var nodeId, node, author
+  const authorLedger = AuthorLedger()
+  const queue = graph.rootNodeKeys
+  let nodeId, node, author
 
   while (queue.length) {
     nodeId = queue.shift()
@@ -29,7 +29,7 @@ module.exports = function findTimeTravellers (graph, opts = {}) {
 }
 
 function AuthorLedger () {
-  var ledger = {}
+  const ledger = {}
   // for each author, for each message they posted, collect into an array
   // { nodeId, seq, dist: longest distance to that message }
 
@@ -55,7 +55,7 @@ function GetLongestPath (graph) {
 }
 
 function reviewLedger (authorLedger) {
-  var timeTravellers = []
+  const timeTravellers = []
 
   authorLedger.forEach(([author, collection]) => {
     collection
