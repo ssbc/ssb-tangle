@@ -1,3 +1,17 @@
+module.exports = {
+  strategy: {
+    compose: require('./strategy/compose'),
+    overwrite: require('./strategy/overwrite'),
+    simpleSet: require('./strategy/simple-set')
+  },
+  graphTools: {
+    dijkstra: require('./graph-tools/dijkstra'),
+    findTimeTravellers: require('./graph-tools/find-time-travellers'),
+    getHeads: require('./graph-tools/get-heads'),
+    reduce: require('./graph-tools/reduce')
+  }
+}
+
 // This is the ssb-tangle@1.0.0
 
 // const pull = require('pull-stream')
