@@ -2,7 +2,7 @@ const Reduce = require('@tangle/reduce')
 
 let warnCount = 0
 module.exports = function reduce (entryNode, otherNodes, strategy, opts = {}) {
-  if (warnCount++ % 1000 === 0) console.trace('please use @tangle/reduce instead. NOTE is has a slightly different API')
+  if (warnCount++ % 1000 === 0) console.warn('please use @tangle/reduce instead. NOTE is has a slightly different API')
   if (opts.getThread) {
     opts.getBacklinks = node => opts.getThread(node).previous
   }
