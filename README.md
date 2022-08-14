@@ -1,4 +1,4 @@
-:warning: **This module is being deprecated. Please use modules from gitlab.com/tangle-js**
+:warning: **This module is being deprecated. Please use modules from https://gitlab.com/tangle-js**
 
 # ssb-tangle
 
